@@ -52,3 +52,16 @@ Infectados_history = structuredata(dataframe = Data_covid, variable = "fecha_dia
 Recuperados_history = structuredata(dataframe = Data_covid, variable = "fecha_recuperado")
 Muertes_history = structuredata(dataframe = Data_covid, variable = "fecha_de_muerte")
 
+import matplotlib.pyplot as plt
+medellin = Muertes_history[Muertes_history["ciudad_de_ubicaci_n"]=="Medellín"]
+
+
+plt.plot(medellin.fecha_de_muerte,medellin.id_de_caso)
+plt.show()
+plt.savefig('fig/plot1.png')
+
+from jinja2 import Template
+str = open('Template/index.html', 'r').read()
+template = Template(str)
+str = template.render(muertos= 2000)
+open('index.html', 'w').write(str);
