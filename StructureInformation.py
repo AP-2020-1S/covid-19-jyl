@@ -1,6 +1,9 @@
 import pandas as pd
 from sodapy import Socrata
 import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
 
 def get_information(url,limit):
     client = Socrata(url, None)
@@ -52,7 +55,7 @@ Infectados_history = structuredata(dataframe = Data_covid, variable = "fecha_dia
 Recuperados_history = structuredata(dataframe = Data_covid, variable = "fecha_recuperado")
 Muertes_history = structuredata(dataframe = Data_covid, variable = "fecha_de_muerte")
 
-import matplotlib.pyplot as plt
+
 medellin = Muertes_history[Muertes_history["ciudad_de_ubicaci_n"]=="Medellín"]
 
 
@@ -65,3 +68,26 @@ str = open('Template/index.html', 'r').read()
 template = Template(str)
 str = template.render(muertos= 2000)
 open('index.html', 'w').write(str);
+
+
+####################################################################### analisis de correlacion#######
+
+recuperadostime = Data_covid[Data_covid["fecha_diagnostico"].notnull()]
+recuperadostime = recuperadostime[recuperadostime["fecha_recuperado"].notnull()]
+recuperadostime['fecha_diagnostico'] = recuperadostime['fecha_diagnostico'].str[:10]
+recuperadostime['fecha_diagnostico'] =pd.to_datetime(recuperadostime['fecha_diagnostico'])
+recuperadostime['fecha_recuperado'] = recuperadostime['fecha_recuperado'].str[:10]
+recuperadostime['fecha_recuperado'] =pd.to_datetime(recuperadostime['fecha_recuperado'])
+
+a =((recuperadostime['fecha_recuperado'] - recuperadostime['fecha_diagnostico'])/ np.timedelta64(1, 'D')).astype(int)
+
+
+sns.distplot(a, hist=True, kde=True,
+             bins=int(180/5), color = 'darkblue',
+             hist_kws={'edgecolor':'black'},
+             kde_kws={'linewidth': 4})
+
+###################### modelo Regresion rezagos###############
+
+infectados = Infectados_history[[""]]
+Infectados_history.columns
