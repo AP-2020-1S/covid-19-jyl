@@ -2,7 +2,6 @@ import pandas as pd
 from sodapy import Socrata
 import numpy as np
 import matplotlib.pyplot as plt
-import seaborn as sns
 
 
 def get_information(url,limit):
@@ -11,12 +10,18 @@ def get_information(url,limit):
     data = pd.DataFrame.from_records(data)
     return data
 
+def castDate(data,value):
+    data[value] = data[value].str[:10]
+    data[value] = pd.to_datetime(data[value])
+    return data
+
+
 def filter_city_categorical_values(dataframe, filterCity):
     data_frame_Covid_19 = dataframe[dataframe.ciudad_de_ubicaci_n.isin(filterCity)]
     data_frame_Covid_19['edad'] = data_frame_Covid_19['edad'].astype(int)
 
     conditions = [
-        (data_frame_Covid_19['edad'] <= 20),
+       (data_frame_Covid_19['edad'] <= 20),
         (data_frame_Covid_19['edad'] > 20) & (data_frame_Covid_19['edad'] <= 40),
         (data_frame_Covid_19['edad'] > 40) & (data_frame_Covid_19['edad'] <= 60),
         (data_frame_Covid_19['edad'] > 60) & (data_frame_Covid_19['edad'] <= 80),
@@ -26,6 +31,13 @@ def filter_city_categorical_values(dataframe, filterCity):
     values = ['< 20 Años', '21-30 Años', '41-60 Años', '61-80 Años', '> 80 Años']
 
     data_frame_Covid_19['EdadCate'] = np.select(conditions, values)
+    data_frame_Covid_19 =castDate(data = data_frame_Covid_19,value = "fecha_de_notificaci_n")
+    data_frame_Covid_19 = castDate(data=data_frame_Covid_19, value="fecha_diagnostico")
+    data_frame_Covid_19 = castDate(data=data_frame_Covid_19, value="fecha_recuperado")
+    data_frame_Covid_19 = castDate(data=data_frame_Covid_19, value="fecha_reporte_web")
+    data_frame_Covid_19 = castDate(data=data_frame_Covid_19, value="fecha_de_muerte")
+
+
     return data_frame_Covid_19
 
 def structuredata(dataframe,variable):
@@ -51,9 +63,15 @@ Data_covid = filter_city_categorical_values(dataframe = Data_covid,
                                                             'Barranquilla',
                                                             'Cartagena de Indias'])
 
+
+
+
+
 Infectados_history = structuredata(dataframe = Data_covid, variable = "fecha_diagnostico")
 Recuperados_history = structuredata(dataframe = Data_covid, variable = "fecha_recuperado")
 Muertes_history = structuredata(dataframe = Data_covid, variable = "fecha_de_muerte")
+
+
 
 
 medellin = Muertes_history[Muertes_history["ciudad_de_ubicaci_n"]=="Medellín"]
@@ -63,31 +81,12 @@ plt.plot(medellin.fecha_de_muerte,medellin.id_de_caso)
 plt.show()
 plt.savefig('fig/plot1.png')
 
+
+
+
+
 from jinja2 import Template
 str = open('Template/index.html', 'r').read()
 template = Template(str)
 str = template.render(muertos= 2000)
 open('index.html', 'w').write(str);
-
-
-####################################################################### analisis de correlacion#######
-
-recuperadostime = Data_covid[Data_covid["fecha_diagnostico"].notnull()]
-recuperadostime = recuperadostime[recuperadostime["fecha_recuperado"].notnull()]
-recuperadostime['fecha_diagnostico'] = recuperadostime['fecha_diagnostico'].str[:10]
-recuperadostime['fecha_diagnostico'] =pd.to_datetime(recuperadostime['fecha_diagnostico'])
-recuperadostime['fecha_recuperado'] = recuperadostime['fecha_recuperado'].str[:10]
-recuperadostime['fecha_recuperado'] =pd.to_datetime(recuperadostime['fecha_recuperado'])
-
-a =((recuperadostime['fecha_recuperado'] - recuperadostime['fecha_diagnostico'])/ np.timedelta64(1, 'D')).astype(int)
-
-
-sns.distplot(a, hist=True, kde=True,
-             bins=int(180/5), color = 'darkblue',
-             hist_kws={'edgecolor':'black'},
-             kde_kws={'linewidth': 4})
-
-###################### modelo Regresion rezagos###############
-
-infectados = Infectados_history[[""]]
-Infectados_history.columns
