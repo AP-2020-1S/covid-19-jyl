@@ -3,8 +3,10 @@ import seaborn as sns
 from sklearn import datasets, linear_model, metrics
 from sklearn.model_selection import train_test_split
 import pandas as pd
-
-####################################################################### analisis de correlacion#######
+import numpy as np
+from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import cross_validate
+ ####################################################################### analisis de correlacion#######
 
 a =((Data_covid['fecha_recuperado'] - Data_covid['fecha_diagnostico'])/ np.timedelta64(1, 'D')).dropna().astype(int)
 
@@ -44,19 +46,62 @@ def ModelData(DataX,DataY,ciudad,numberLag):
     Rezagos.columns = namescolumns
     return Rezagos
 
-Data_Modelo = ModelData(DataX = Infectados_history, DataY = Recuperados_history, ciudad = "Medellín",numberLag = 25)
+def error_cuadratico(y_real,y_pred):
+    return np.sum((y_real - y_pred)**2/len(y_real))
 
+Data_Modelo = ModelData(DataX = Infectados_history, DataY = Recuperados_history, ciudad = "Medellín",numberLag = 50)
 
-Variables_Independientes = ['Rezago24','Rezago23','Rezago22','Rezago21']
+Variables_Independientes = ["Rezago" + str(x) for x in range(1, Data_Modelo.shape[1] - 2)]
 Variable_Dependiente = ['Numero_de_Recuperados']
 
 
-X = Data_Modelo[Variables_Independientes].as_matrix()
-Y = infectadosrezagados[['Numero_de_Recuperados']]
+
+X = Data_Modelo[Variables_Independientes]
+Y = Data_Modelo[Variable_Dependiente]
 
 X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.2,
                                                     random_state=1)
 
 
-plt.scatter(X_train, y_train,  color='black')
-plt.plot(diabetes_X_test, diabetes_y_pred, color='blue', linewidth=3)
+
+
+
+modelo = linear_model.LinearRegression().fit(X_train, y_train)
+
+
+scores = cross_validate(modelo, X_train, y_train, cv=3,
+                        scoring= 'neg_mean_squared_error')
+
+scores.get("test_score")
+
+
+Data_Error = pd.DataFrame(columns=["Rezago","error"])
+
+for x in Variables_Independientes:
+    X_train1 = X_train[[x]]
+    X_test1 = X_test[[x]]
+    modelo = linear_model.LinearRegression()
+    modelo.fit(X_train1, y_train)
+    y_pred = modelo.predict(X_test1)
+    error = error_cuadratico(y_real=y_test, y_pred=y_pred)
+    value = pd.DataFrame({"Rezago":x,
+                          "error":error})
+    Data_Error = Data_Error.append(value,ignore_index=False)
+
+Data_Error = Data_Error.sort_values(by=['error'], ascending=True)
+
+
+
+
+X_trainReza18 = X_train[["Rezago18","Rezago24"]]
+X_test1 = X_test[["Rezago18","Rezago24"]]
+modelo18 = linear_model.LinearRegression()
+modelo18.fit(X_trainReza18, y_train)
+y_pred = modelo18.predict(X_test1)
+
+error = error_cuadratico(y_real=y_test, y_pred=y_pred)
+
+
+df = pd.DataFrame('Yreal':y_test,'ypred':y_pred)
+
+
