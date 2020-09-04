@@ -1,7 +1,6 @@
 import pandas as pd
 from sodapy import Socrata
 import numpy as np
-import matplotlib.pyplot as plt
 
 
 def get_information(url,limit):
@@ -55,38 +54,24 @@ def structuredata(dataframe,variable):
     result = pd.merge(nummbercase, numbercaseedada, on=[variable, 'ciudad_de_ubicaci_n'], how="left")
     return result
 
-Data_covid = get_information(url = "www.datos.gov.co",limit = 40000000)
-Data_covid = filter_city_categorical_values(dataframe = Data_covid,
-                                            filterCity = ['Bogotá D.C.',
+def inputInformation(url):
+    Data_covid = get_information(url=url, limit=40000000)
+    Data_covid = filter_city_categorical_values(dataframe=Data_covid,
+                                                filterCity=['Bogotá D.C.',
                                                             'Medellín',
                                                             'Cali',
                                                             'Barranquilla',
                                                             'Cartagena de Indias'])
 
+    Infectados_history = structuredata(dataframe=Data_covid, variable="fecha_diagnostico")
+    Recuperados_history = structuredata(dataframe=Data_covid, variable="fecha_recuperado")
+    Muertes_history = structuredata(dataframe=Data_covid, variable="fecha_de_muerte")
+    return  Infectados_history, Recuperados_history,Muertes_history
 
 
-
-
-Infectados_history = structuredata(dataframe = Data_covid, variable = "fecha_diagnostico")
-Recuperados_history = structuredata(dataframe = Data_covid, variable = "fecha_recuperado")
-Muertes_history = structuredata(dataframe = Data_covid, variable = "fecha_de_muerte")
-
-
-
-
-medellin = Muertes_history[Muertes_history["ciudad_de_ubicaci_n"]=="Medellín"]
-
-
+""""
 plt.plot(medellin.fecha_de_muerte,medellin.id_de_caso)
 plt.show()
 plt.savefig('fig/plot1.png')
+"""
 
-
-
-
-
-from jinja2 import Template
-str = open('Template/index.html', 'r').read()
-template = Template(str)
-str = template.render(muertos= 2000)
-open('index.html', 'w').write(str);

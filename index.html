@@ -1,111 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <link rel="stylesheet" href="background style.css">
-    <link rel="stylesheet" href="style.css">
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="utf-8">
     <title>Covid</title>
+          <style>
 
-</head>
+        body {
+          font-family: Arial, Helvetica, sans-serif;
+          padding-left: 10px;
+        }
 
-<body>
+        header {
+            font-size: 20px;
+        }
 
-<div class="tab">
-  <button class="tablinks" onclick="materia(event, 'General')">General</button>
-   <button class="tablinks" onclick="materia(event, 'Bogota')">Bogota</button>
-  <button class="tablinks" onclick="materia(event, 'Medellin')">Medellin</button>
-    <button class="tablinks" onclick="materia(event, 'Cali')">Cali</button>
-    <button class="tablinks" onclick="materia(event, 'Barranquilla')">Barranquilla</button>
-    <button class="tablinks" onclick="materia(event, 'Cartagena')">Cartagena</button>
-  </div>
+        nav {
+          float: left;
+          width: 20%;
+          height: 150px;
+          background: #eeeeee;
+          padding: 20px;
+        }
 
+        .seltext {
+            font-weight: bold;
+        }
 
-<div id = "General" class="tabContenido">
+        .auxtext {
+            font-size: 14px;
+            color: #807F7F;
 
-    <center>  <h1 style="background-color:rgb(63, 136, 143); height = 300px;width: 450px;">Covid 19 Colombia</h1> </center>
-
-    <div class="flexbox-container">
-    <div class=" flexbox-item flexbox-text"> Infectados </div>
-    <div class=" flexbox-item flexbox-text">Recuperados</div>
-    <div class=" flexbox-item flexbox-text">Muertos</div>
-
-</div>
-    <div class="flexbox-container">
-
-  <div class=" flexbox-item flexbox-value"> 2000 </div>
-    <div class=" flexbox-item flexbox-value">3000</div>
-    <div class=" flexbox-item flexbox-value">500</div>
-
-</div>
-
-</div>
- <div id = "Bogota" class="tabContenido">
-
-       <center>  <h1 style="background-color:rgb(63, 136, 143); height = 300px;width: 450px;">Pronosticos</h1> </center>
-    <div class="flexbox-container">
-    <div class=" flexbox-item flexbox-text"> Infectados </div>
-    <div class=" flexbox-item flexbox-text">Recuperados</div>
-    <div class=" flexbox-item flexbox-text">Muertos</div>
-
-</div>
-    <div class="flexbox-container">
-
-  <div class=" flexbox-item flexbox-value"> 2000 </div>
-    <div class=" flexbox-item flexbox-value">3000</div>
-    <div class=" flexbox-item flexbox-value">500</div>
-
-</div>
-      <div class="row">
-  <div class="column">
-    <img src="fig/plot1.png">
-  </div>
-  <div class="column">
-    <img src="fig/plot1.png">
-  </div>
-  <div class="column">
-    <img src="fig/plot1.png" >
-  </div>
-</div>
-
- </div>
- <div id = "Medellin" class="tabContenido">
-     <h3>Ahi vamos</h3>
-
- </div>
- <div id = "Cali" class="tabContenido">
-     <h3>Con toda</h3>
-
- </div>
-<div id = "Barranquilla" class="tabContenido">
-     <h3>lo lograremos</h3>
-
- </div>
-<div id = "Cartagena" class="tabContenido">
-     <h3>finnn</h3>
-
- </div>
+          }
+        .boxtitle {
+          background-color: lightblue;
+            width: 200px;
+              padding: 25px;
+              }
 
 
-<script>
-function materia(evt, curso){
-    var i, tabContenido, tablinks;
+        }
+        .boxone {
+          background-color: red;
+            width: 100px;
+              padding: 25px;
+              }
 
-    tabContenido = document.getElementsByClassName("tabContenido");
-    for (i = 0; i < tabContenido.length; i++) {
-         tabContenido[i].style.display = "none";
-       }
-
-    tablinks = document.getElementsByClassName("tablinks");
-    for (i = 0; i < tablinks.length; i++) {
-         tablinks[i].className =   tablinks[i].className.replace("activo", "");
-       }
-
-    document.getElementById(curso).style.display = "block";
-    evt.currentTarget.className += "activo";
-}
-
-</script>
+    </style>
 
 
-</body>
+  </head>
+  <body>
+  <header>
+      <center>
+          <h1 style="background-color:rgb(36, 113, 163);">Covid 19 Colombia</h1>
+      </center>
+
+      <div class="box">
+        Muertes medellin
+    </div>
+      <div class="boxtitle">
+        <center>
+        <p>2000</p>
+            <center>
+    </div>
+
+
+    <div class="myImage" id="plot"   style="display:block"> <img src="fig/plot1.png"   alt="plot">   </div>
+
+    <section>
+        <h2>Titulo 1</h1>
+
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce nibh velit, gravida
+        sed diam a, consectetur cursus felis. Duis scelerisque congue efficitur. Duis nec lacus
+        id nulla tempus commodo. Curabitur ut tincidunt mauris. Vivamus tincidunt risus augue,
+        a egestas tellus sodales vitae. Fusce vitae felis eu tortor sodales gravida. </p>
+
+        <p>Nulla eget condimentum nulla. Fusce pretium ornare lectus eu bibendum. Donec eros mauris,
+        laoreet quis viverra id, lobortis vel dui.</p>
+
+    </section>
+
+
+    <section>
+        <h2>Titulo 2</h2>
+
+        <p> Nullam luctus nibh ac sem tincidunt, ut euismod dui mollis. Integer vitae ante eu
+        tortor luctus imperdiet pulvinar eget neque. Nulla finibus vitae quam quis euismod.
+        Phasellus porttitor nibh et tellus malesuada lacinia. </p>
+    </section>
+
+    <footer>
+        Pie de página
+    </footer>
+
+
+  </body>
 </html>
