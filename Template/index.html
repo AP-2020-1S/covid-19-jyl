@@ -1,98 +1,320 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
+<head>
+    <link rel="stylesheet" href="background style.css">
+    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
     <title>Covid</title>
-          <style>
 
-        body {
-          font-family: Arial, Helvetica, sans-serif;
-          padding-left: 10px;
-        }
+</head>
 
-        header {
-            font-size: 20px;
-        }
+<body>
 
-        nav {
-          float: left;
-          width: 20%;
-          height: 150px;
-          background: #eeeeee;
-          padding: 20px;
-        }
-
-        .seltext {
-            font-weight: bold;
-        }
-
-        .auxtext {
-            font-size: 14px;
-            color: #807F7F;
-
-          }
-        .boxtitle {
-          background-color: lightblue;
-            width: 200px;
-              padding: 25px;
-              }
+<div class="tab">
+  <button class="tablinks" onclick="materia(event, 'General')">General</button>
+   <button class="tablinks" onclick="materia(event, 'Bogota')">Bogota</button>
+  <button class="tablinks" onclick="materia(event, 'Medellin')">Medellín</button>
+    <button class="tablinks" onclick="materia(event, 'Cali')">Cali</button>
+    <button class="tablinks" onclick="materia(event, 'Barranquilla')">Barranquilla</button>
+    <button class="tablinks" onclick="materia(event, 'Cartagena')">Cartagena</button>
+  </div>
 
 
-        }
-        .boxone {
-          background-color: red;
-            width: 100px;
-              padding: 25px;
-              }
+<div id = "General" class="tabContenido">
 
-    </style>
+    <center>  <h1 style="background-color:rgb(63, 136, 143); height = 300px;width: 450px;">Covid 19 Colombia</h1> </center>
+
+    <div class="flexbox-container">
+    <div class=" flexbox-item flexbox-text"> Infectados </div>
+    <div class=" flexbox-item flexbox-text">Recuperados</div>
+    <div class=" flexbox-item flexbox-text">Activos</div>
+    <div class=" flexbox-item flexbox-text">Muertos</div>
+
+</div>
+    <div class="flexbox-container">
+
+  <div class=" flexbox-item flexbox-value"> {{ InfectadosColombia }} </div>
+  <div class=" flexbox-item flexbox-value">{{ RecuperadosColombia }}</div>
+  <div class=" flexbox-item flexbox-value">{{ ActivosColombia }}</div>
+  <div class=" flexbox-item flexbox-value">{{ MuertosColombia }}</div>
+
+</div>
+    <div class="row">
+  <div class="column">
+    <img src="fig/Colombia/ciudades.png">
+  </div>
+  <div class="column">
+    <img src="fig/Colombia/Edades.png">
+  </div>
+  <div class="column">
+    <img src="fig/Colombia/Muertos.png">
+  </div>
+</div>
+</div>
+ <div id = "Bogota" class="tabContenido">
+
+       <center>  <h1 style="background-color:rgb(63, 136, 143); height = 300px;width: 450px;">Estado Actual</h1> </center>
+    <div class="flexbox-container">
+    <div class=" flexbox-item flexbox-text"> Infectados </div>
+    <div class=" flexbox-item flexbox-text">Recuperados</div>
+    <div class=" flexbox-item flexbox-text">Activos</div>
+    <div class=" flexbox-item flexbox-text">Muertos</div>
+
+</div>
+    <div class="flexbox-container">
+
+  <div class=" flexbox-item flexbox-value"> {{ InfectadosBogota }} </div>
+  <div class=" flexbox-item flexbox-value">{{ RecuperadosBogota }}</div>
+  <div class=" flexbox-item flexbox-value">{{ ActivosBogota }}</div>
+  <div class=" flexbox-item flexbox-value">{{ MuertosBogota }}</div>
+
+</div>
+      <div class="row">
+  <div class="column">
+    <img src="fig/Bogota/Edades.png">
+  </div>
+  <div class="column">
+    <img src="fig/Bogota/sexo.png">
+  </div>
+  <div class="column">
+    <img src="fig/Bogota/Muertos.png" >
+  </div>
+</div>
+
+ <center>  <h1 style="background-color:rgb(63, 136, 143); height = 300px;width: 450px;">Pronosticos Infectados</h1> </center>
+
+<center>  <img src="fig/Pronosticos/Bogota/Infectados.png" class="centerimagen"> </center>
 
 
-  </head>
-  <body>
-  <header>
-      <center>
-          <h1 style="background-color:rgb(36, 113, 163);">Covid 19 Colombia</h1>
-      </center>
+  <center>  <h1 style="background-color:rgb(63, 136, 143); height = 300px;width: 450px;">Pronosticos Recuperados</h1> </center>
 
-      <div class="box">
-        Muertes medellin
-    </div>
-      <div class="boxtitle">
-        <center>
-        <p>{{ muertos }}</p>
-            <center>
-    </div>
+<center>  <img src="fig/Pronosticos/Bogota/Recuperados.png" class="centerimagen"> </center>
+
+ <center>  <h1 style="background-color:rgb(63, 136, 143); height = 300px;width: 450px;">Pronosticos Muertos</h1> </center>
+
+<center>  <img src="fig/Pronosticos/Bogota/Muertos.png" class="centerimagen"> </center>
+
+ <center>  <h1 style="background-color:rgb(63, 136, 143); height = 300px;width: 450px;">Pronosticos Activos</h1> </center>
+
+<center>  <img src="fig/Pronosticos/Bogota/Activos.png" class="centerimagen"> </center>
+
+ </div>
+<div id = "Medellin" class="tabContenido">
+
+       <center>  <h1 style="background-color:rgb(63, 136, 143); height = 300px;width: 450px;">Estado Actual</h1> </center>
+    <div class="flexbox-container">
+    <div class=" flexbox-item flexbox-text"> Infectados </div>
+    <div class=" flexbox-item flexbox-text">Recuperados</div>
+    <div class=" flexbox-item flexbox-text">Activos</div>
+    <div class=" flexbox-item flexbox-text">Muertos</div>
+
+</div>
+    <div class="flexbox-container">
+
+  <div class=" flexbox-item flexbox-value"> {{ InfectadosMedellin }} </div>
+  <div class=" flexbox-item flexbox-value">{{ RecuperadosMedellin }}</div>
+  <div class=" flexbox-item flexbox-value">{{ ActivosMedellin }}</div>
+  <div class=" flexbox-item flexbox-value">{{ MuertosMedellin }}</div>
+
+</div>
+      <div class="row">
+  <div class="column">
+    <img src="fig/Medellin/Edades.png">
+  </div>
+  <div class="column">
+    <img src="fig/Medellin/sexo.png">
+  </div>
+  <div class="column">
+    <img src="fig/Medellin/Muertos.png" >
+  </div>
+</div>
+
+ <center>  <h1 style="background-color:rgb(63, 136, 143); height = 300px;width: 450px;">Pronosticos Infectados</h1> </center>
+
+<center>  <img src="fig/Pronosticos/Medellin/Infectados.png" class="centerimagen"> </center>
 
 
-    <div class="myImage" id="plot"   style="display:block"> <img src="fig/plot1.png"   alt="plot">   </div>
+  <center>  <h1 style="background-color:rgb(63, 136, 143); height = 300px;width: 450px;">Pronosticos Recuperados</h1> </center>
 
-    <section>
-        <h2>Titulo 1</h1>
+<center>  <img src="fig/Pronosticos/Medellin/Recuperados.png" class="centerimagen"> </center>
 
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce nibh velit, gravida
-        sed diam a, consectetur cursus felis. Duis scelerisque congue efficitur. Duis nec lacus
-        id nulla tempus commodo. Curabitur ut tincidunt mauris. Vivamus tincidunt risus augue,
-        a egestas tellus sodales vitae. Fusce vitae felis eu tortor sodales gravida. </p>
+ <center>  <h1 style="background-color:rgb(63, 136, 143); height = 300px;width: 450px;">Pronosticos Muertos</h1> </center>
 
-        <p>Nulla eget condimentum nulla. Fusce pretium ornare lectus eu bibendum. Donec eros mauris,
-        laoreet quis viverra id, lobortis vel dui.</p>
+<center>  <img src="fig/Pronosticos/Medellin/Muertos.png" class="centerimagen"> </center>
 
-    </section>
+ <center>  <h1 style="background-color:rgb(63, 136, 143); height = 300px;width: 450px;">Pronosticos Activos</h1> </center>
+
+<center>  <img src="fig/Pronosticos/Medellin/Activos.png" class="centerimagen"> </center>
+
+ </div>
+<div id = "Cali" class="tabContenido">
+
+       <center>  <h1 style="background-color:rgb(63, 136, 143); height = 300px;width: 450px;">Estado Actual</h1> </center>
+    <div class="flexbox-container">
+    <div class=" flexbox-item flexbox-text"> Infectados </div>
+    <div class=" flexbox-item flexbox-text">Recuperados</div>
+    <div class=" flexbox-item flexbox-text">Activos</div>
+    <div class=" flexbox-item flexbox-text">Muertos</div>
+
+</div>
+    <div class="flexbox-container">
+
+  <div class=" flexbox-item flexbox-value"> {{ InfectadosCali }} </div>
+  <div class=" flexbox-item flexbox-value">{{ RecuperadosCali  }}</div>
+  <div class=" flexbox-item flexbox-value">{{ ActivosCali  }}</div>
+  <div class=" flexbox-item flexbox-value">{{ MuertosCali  }}</div>
+
+</div>
+      <div class="row">
+  <div class="column">
+    <img src="fig/Cali/Edades.png">
+  </div>
+  <div class="column">
+    <img src="fig/Cali/sexo.png">
+  </div>
+  <div class="column">
+    <img src="fig/Cali/Muertos.png" >
+  </div>
+</div>
+
+ <center>  <h1 style="background-color:rgb(63, 136, 143); height = 300px;width: 450px;">Pronosticos Infectados</h1> </center>
+
+<center>  <img src="fig/Pronosticos/Cali/Infectados.png" class="centerimagen"> </center>
 
 
-    <section>
-        <h2>Titulo 2</h2>
+  <center>  <h1 style="background-color:rgb(63, 136, 143); height = 300px;width: 450px;">Pronosticos Recuperados</h1> </center>
 
-        <p> Nullam luctus nibh ac sem tincidunt, ut euismod dui mollis. Integer vitae ante eu
-        tortor luctus imperdiet pulvinar eget neque. Nulla finibus vitae quam quis euismod.
-        Phasellus porttitor nibh et tellus malesuada lacinia. </p>
-    </section>
+<center>  <img src="fig/Pronosticos/Cali/Recuperados.png" class="centerimagen"> </center>
 
-    <footer>
-        Pie de página
-    </footer>
+ <center>  <h1 style="background-color:rgb(63, 136, 143); height = 300px;width: 450px;">Pronosticos Muertos</h1> </center>
+
+<center>  <img src="fig/Pronosticos/Cali/Muertos.png" class="centerimagen"> </center>
+
+ <center>  <h1 style="background-color:rgb(63, 136, 143); height = 300px;width: 450px;">Pronosticos Activos</h1> </center>
+
+<center>  <img src="fig/Pronosticos/Cali/Activos.png" class="centerimagen"> </center>
+
+ </div>
+<div id = "Barranquilla" class="tabContenido">
+
+       <center>  <h1 style="background-color:rgb(63, 136, 143); height = 300px;width: 450px;">Estado Actual</h1> </center>
+    <div class="flexbox-container">
+    <div class=" flexbox-item flexbox-text"> Infectados </div>
+    <div class=" flexbox-item flexbox-text">Recuperados</div>
+    <div class=" flexbox-item flexbox-text">Activos</div>
+    <div class=" flexbox-item flexbox-text">Muertos</div>
+
+</div>
+    <div class="flexbox-container">
+
+  <div class=" flexbox-item flexbox-value"> {{ InfectadosBarranquilla }} </div>
+  <div class=" flexbox-item flexbox-value">{{ RecuperadosBarranquilla  }}</div>
+  <div class=" flexbox-item flexbox-value">{{ ActivosBarranquilla  }}</div>
+  <div class=" flexbox-item flexbox-value">{{ MuertosBarranquilla  }}</div>
+
+</div>
+      <div class="row">
+  <div class="column">
+    <img src="fig/Barranquilla/Edades.png">
+  </div>
+  <div class="column">
+    <img src="fig/Barranquilla/sexo.png">
+  </div>
+  <div class="column">
+    <img src="fig/Barranquilla/Muertos.png" >
+  </div>
+</div>
+
+ <center>  <h1 style="background-color:rgb(63, 136, 143); height = 300px;width: 450px;">Pronosticos Infectados</h1> </center>
+
+<center>  <img src="fig/Pronosticos/Barranquilla/Infectados.png" class="centerimagen"> </center>
 
 
-  </body>
+  <center>  <h1 style="background-color:rgb(63, 136, 143); height = 300px;width: 450px;">Pronosticos Recuperados</h1> </center>
+
+<center>  <img src="fig/Pronosticos/Barranquilla/Recuperados.png" class="centerimagen"> </center>
+
+ <center>  <h1 style="background-color:rgb(63, 136, 143); height = 300px;width: 450px;">Pronosticos Muertos</h1> </center>
+
+<center>  <img src="fig/Pronosticos/Barranquilla/Muertos.png" class="centerimagen"> </center>
+
+ <center>  <h1 style="background-color:rgb(63, 136, 143); height = 300px;width: 450px;">Pronosticos Activos</h1> </center>
+
+<center>  <img src="fig/Pronosticos/Barranquilla/Activos.png" class="centerimagen"> </center>
+
+ </div>
+<div id = "Cartagena" class="tabContenido">
+
+       <center>  <h1 style="background-color:rgb(63, 136, 143); height = 300px;width: 450px;">Estado Actual</h1> </center>
+    <div class="flexbox-container">
+    <div class=" flexbox-item flexbox-text"> Infectados </div>
+    <div class=" flexbox-item flexbox-text">Recuperados</div>
+    <div class=" flexbox-item flexbox-text">Activos</div>
+    <div class=" flexbox-item flexbox-text">Muertos</div>
+
+</div>
+    <div class="flexbox-container">
+
+  <div class=" flexbox-item flexbox-value"> {{ InfectadosCartagena }} </div>
+  <div class=" flexbox-item flexbox-value">{{ RecuperadosCartagena }}</div>
+  <div class=" flexbox-item flexbox-value">{{ ActivosCartagena  }}</div>
+  <div class=" flexbox-item flexbox-value">{{ MuertosCartagena }}</div>
+
+</div>
+      <div class="row">
+  <div class="column">
+    <img src="fig/Cartagena/Edades.png">
+  </div>
+  <div class="column">
+    <img src="fig/Cartagena/sexo.png">
+  </div>
+  <div class="column">
+    <img src="fig/Cartagena/Muertos.png" >
+  </div>
+</div>
+
+ <center>  <h1 style="background-color:rgb(63, 136, 143); height = 300px;width: 450px;">Pronosticos Infectados</h1> </center>
+
+<center>  <img src="fig/Pronosticos/Cartagena/Infectados.png" class="centerimagen"> </center>
+
+
+  <center>  <h1 style="background-color:rgb(63, 136, 143); height = 300px;width: 450px;">Pronosticos Recuperados</h1> </center>
+
+<center>  <img src="fig/Pronosticos/Cartagena/Recuperados.png" class="centerimagen"> </center>
+
+ <center>  <h1 style="background-color:rgb(63, 136, 143); height = 300px;width: 450px;">Pronosticos Muertos</h1> </center>
+
+<center>  <img src="fig/Pronosticos/Cartagena/Muertos.png" class="centerimagen"> </center>
+
+ <center>  <h1 style="background-color:rgb(63, 136, 143); height = 300px;width: 450px;">Pronosticos Activos</h1> </center>
+
+<center>  <img src="fig/Pronosticos/Cartagena/Activos.png" class="centerimagen"> </center>
+
+ </div>
+
+
+
+
+<script>
+function materia(evt, curso){
+    var i, tabContenido, tablinks;
+
+    tabContenido = document.getElementsByClassName("tabContenido");
+    for (i = 0; i < tabContenido.length; i++) {
+         tabContenido[i].style.display = "none";
+       }
+
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+         tablinks[i].className =   tablinks[i].className.replace("activo", "");
+       }
+
+    document.getElementById(curso).style.display = "block";
+    evt.currentTarget.className += "activo";
+}
+
+</script>
+
+
+</body>
 </html>

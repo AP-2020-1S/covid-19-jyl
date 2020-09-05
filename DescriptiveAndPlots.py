@@ -1,10 +1,6 @@
-from StructureInformation import get_information
 import matplotlib.pyplot as plot
 import seaborn as sns
 import numpy as np
-
-Data_covid = get_information(url="www.datos.gov.co",limit=40000000)
-
 
 def barplotciudades(Data_covid, pathsave,title):
     ciudadesinfectados = Data_covid.groupby("ciudad_de_ubicaci_n").count()["id_de_caso"].sort_values(
@@ -112,12 +108,7 @@ def plotsCiudad(Data_covid,pathsave,ciudad):
     return valores
 
 
-colombia = PlotsColombia(Data_covid = Data_covid)
-Medellin = plotsCiudad(Data_covid = Data_covid,pathsave = 'fig/Medellin/',ciudad = "Medellín")
-Cali = plotsCiudad(Data_covid = Data_covid,pathsave = 'fig/Cali/',ciudad = "Cali")
-bogota = plotsCiudad(Data_covid = Data_covid,pathsave = 'fig/Bogota/',ciudad = 'Bogotá D.C.')
-Barranquilla = plotsCiudad(Data_covid = Data_covid,pathsave = 'fig/Barranquilla/',ciudad = "Barranquilla")
-Cartagena = plotsCiudad(Data_covid = Data_covid,pathsave = 'fig/Cartagena/',ciudad = "Cartagena de Indias")
+
 
 
 

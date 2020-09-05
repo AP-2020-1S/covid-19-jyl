@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="background style.css">
+    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <title>Covid</title>
+
+</head>
+
+<body>
+
+<div class="tab">
+  <button class="tablinks" onclick="materia(event, 'General')">General</button>
+   <button class="tablinks" onclick="materia(event, 'Bogota')">Bogota</button>
+  <button class="tablinks" onclick="materia(event, 'Medellin')">Medellin</button>
+    <button class="tablinks" onclick="materia(event, 'Cali')">Cali</button>
+    <button class="tablinks" onclick="materia(event, 'Barranquilla')">Barranquilla</button>
+    <button class="tablinks" onclick="materia(event, 'Cartagena')">Cartagena</button>
+  </div>
+
+
+<div id = "General" class="tabContenido">
+
+    <center>  <h1 style="background-color:rgb(63, 136, 143); height = 300px;width: 450px;">Covid 19 Colombia</h1> </center>
+
+    <div class="flexbox-container">
+    <div class=" flexbox-item flexbox-text"> Infectados </div>
+    <div class=" flexbox-item flexbox-text">Recuperados</div>
+    <div class=" flexbox-item flexbox-text">Muertos</div>
+
+</div>
+    <div class="flexbox-container">
+
+  <div class=" flexbox-item flexbox-value"> {{ muertos }} </div>
+    <div class=" flexbox-item flexbox-value">3000</div>
+    <div class=" flexbox-item flexbox-value">500</div>
+
+</div>
+
+</div>
+ <div id = "Bogota" class="tabContenido">
+
+       <center>  <h1 style="background-color:rgb(63, 136, 143); height = 300px;width: 450px;">Pronosticos</h1> </center>
+    <div class="flexbox-container">
+    <div class=" flexbox-item flexbox-text"> Infectados </div>
+    <div class=" flexbox-item flexbox-text">Recuperados</div>
+    <div class=" flexbox-item flexbox-text">Muertos</div>
+
+</div>
+    <div class="flexbox-container">
+
+  <div class=" flexbox-item flexbox-value"> 2000 </div>
+    <div class=" flexbox-item flexbox-value">3000</div>
+    <div class=" flexbox-item flexbox-value">500</div>
+
+</div>
+      <div class="row">
+  <div class="column">
+    <img src="fig/plot1.png">
+  </div>
+  <div class="column">
+    <img src="fig/plot1.png">
+  </div>
+  <div class="column">
+    <img src="fig/plot1.png" >
+  </div>
+</div>
+
+ </div>
+ <div id = "Medellin" class="tabContenido">
+     <h3>Ahi vamos</h3>
+
+ </div>
+ <div id = "Cali" class="tabContenido">
+     <h3>Con toda</h3>
+
+ </div>
+<div id = "Barranquilla" class="tabContenido">
+     <h3>lo lograremos</h3>
+
+ </div>
+<div id = "Cartagena" class="tabContenido">
+     <h3>finnn</h3>
+
+ </div>
+
+
+<script>
+function materia(evt, curso){
+    var i, tabContenido, tablinks;
+
+    tabContenido = document.getElementsByClassName("tabContenido");
+    for (i = 0; i < tabContenido.length; i++) {
+         tabContenido[i].style.display = "none";
+       }
+
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+         tablinks[i].className =   tablinks[i].className.replace("activo", "");
+       }
+
+    document.getElementById(curso).style.display = "block";
+    evt.currentTarget.className += "activo";
+}
+
+</script>
+
+
+</body>
+</html>
