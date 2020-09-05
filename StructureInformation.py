@@ -55,6 +55,7 @@ def structuredata(dataframe,variable):
     return result
 
 def inputInformation(url):
+    print("Estamos obteniendo la informacion")
     Data_covid = get_information(url=url, limit=40000000)
     Data_covid = filter_city_categorical_values(dataframe=Data_covid,
                                                 filterCity=['Bogotá D.C.',

@@ -51,7 +51,7 @@ def model_Rezagos(Data_Modelo,Variables_Independientes,Variable_Dependiente,pred
         X_test = test11[Variables_Independientes]
         y_train = train11[Variable_Dependiente]
         y_test = test11[Variable_Dependiente]
-        print(i)
+        #print(i)
         for x in Variables_Independientes:
             X_train1 = X_train[[x]]
             X_test1 = X_test[[x]]
@@ -141,6 +141,8 @@ def PronosticosRecuperados(Infectados_history,Recuperados_history,ciudad,numberL
     return Pronostico
 
 def GeneracionPronsoticos_Recuperados(Infectados_history,Recuperados_history):
+    print("Estamos pronosticando")
+
     PronosticosBog = PronosticosRecuperados(Infectados_history=Infectados_history,
                                             Recuperados_history=Recuperados_history,
                                             ciudad='Bogotá D.C.',
@@ -170,7 +172,7 @@ def GeneracionPronsoticos_Recuperados(Infectados_history,Recuperados_history):
                                               ciudad='Cartagena de Indias',
                                               numberLag=25,
                                               predicciones=10)
-
+    print("Pronosticos realizados")
     return PronosticosBog,Pronosticosmed,Pronosticoscali,PronosticosBarra,PronosticosCarta
 
 
