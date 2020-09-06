@@ -38,7 +38,8 @@ def BaseModeloMuertes(Sintomas_history,Muertes_history,ciudad):
     X.columns = ['fecha', '21-40 Años', '41-60 Años', '61-80 Años', '< 20 Años', '> 80 Años']
     X = pd.merge(X, y, on=['fecha'], how="left")
     X = X.dropna()
-    return X
+    fechamax = y[['fecha']].max()
+    return X, fechamax
 
 def TrainMuertes(DataModelMuertes,predicciones,iniciogenerador):
     x = DataModelMuertes[['21-40 Años', '41-60 Años', '61-80 Años', '< 20 Años', '> 80 Años']]
@@ -67,8 +68,8 @@ def TrainMuertes(DataModelMuertes,predicciones,iniciogenerador):
     rezagos = rezagos.index.tolist()[0:4]
     return  rezagos
 
-def pronosticosMuerte(DataModelMuertes, rezagos):
-    datelist = pd.date_range(DataModelMuertes["fecha"].max() + timedelta(1), periods=10)
+def pronosticosMuerte(DataModelMuertes, rezagos,fechamax):
+    datelist = pd.date_range(fechamax+ timedelta(1), periods=10)
 
     indexday = pd.DataFrame({"index": range(1, 11)})
 
@@ -106,10 +107,10 @@ def pronosticosMuerte(DataModelMuertes, rezagos):
     return pronosticofinal
 
 def pronosticosDeadCity(Sintomas_history,Muertes_history,ciudad):
-    DataModelMuertes = BaseModeloMuertes(Sintomas_history=Sintomas_history, Muertes_history=Muertes_history,
+    DataModelMuertes, fechamax = BaseModeloMuertes(Sintomas_history=Sintomas_history, Muertes_history=Muertes_history,
                                          ciudad=ciudad)
     rezagos = TrainMuertes(DataModelMuertes=DataModelMuertes, predicciones=10, iniciogenerador=50)
-    Pronos = pronosticosMuerte(DataModelMuertes = DataModelMuertes, rezagos = rezagos)
+    Pronos = pronosticosMuerte(DataModelMuertes = DataModelMuertes, rezagos = rezagos,fechamax =fechamax)
     return Pronos
 
 Data_covid,Infectados_history, Recuperados_history,Muertes_history,Sintomas_history = inputInformation(url="www.datos.gov.co")
@@ -119,14 +120,18 @@ pronosticosBog = pronosticosDeadCity(Sintomas_history =Sintomas_history,
                                    ciudad = 'Bogotá D.C.')
 
 pronosticosMed = pronosticosDeadCity(Sintomas_history =Sintomas_history,
-                                   Muertes_history = Sintomas_history,
-                                   ciudad = 'Bogotá D.C.')
+                                   Muertes_history = Muertes_history,
+                                   ciudad = 'Medellín')
 pronosticosCali = pronosticosDeadCity(Sintomas_history =Sintomas_history,
-                                   Muertes_history = Sintomas_history,
-                                   ciudad = 'Bogotá D.C.')
-pronosticosBog = pronosticosDeadCity(Sintomas_history =Sintomas_history,
-                                   Muertes_history = Sintomas_history,
-                                   ciudad = 'Bogotá D.C.')
+                                   Muertes_history = Muertes_history,
+                                   ciudad = 'Cali')
+
+pronosticosBarranq = pronosticosDeadCity(Sintomas_history =Sintomas_history,
+                                   Muertes_history = Muertes_history,
+                                   ciudad = 'Barranquilla')
+pronosticosCarta= pronosticosDeadCity(Sintomas_history =Sintomas_history,
+                                   Muertes_history = Muertes_history,
+                                   ciudad = 'Cartagena de Indias')
 
 
 
