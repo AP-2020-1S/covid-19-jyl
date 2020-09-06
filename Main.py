@@ -1,4 +1,5 @@
 from ModelRecuperados import  GeneracionPronsoticos_Recuperados
+from ModeloMuertes import  GeneracionPronsoticos_Muertos
 from StructureInformation import inputInformation
 from DescriptiveAndPlots import plotsCiudad
 from DescriptiveAndPlots import PlotsColombia
@@ -8,6 +9,7 @@ if __name__ == "__main__":
 
     Data_covid,Infectados_history, Recuperados_history,Muertes_history,Sintomas_history = inputInformation(url="www.datos.gov.co")
     GeneracionPronsoticos_Recuperados(Infectados_history=Infectados_history, Recuperados_history=Recuperados_history)
+    GeneracionPronsoticos_Muertos(Sintomas_history=Sintomas_history, Muertes_history=Muertes_history)
 
     colombia = PlotsColombia(Data_covid=Data_covid)
     Medellin = plotsCiudad(Data_covid=Data_covid, pathsave='fig/Medellin/', ciudad="Medellín")
