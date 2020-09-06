@@ -67,7 +67,8 @@ def model_Rezagos(Data_Modelo,Variables_Independientes,Variable_Dependiente,pred
 
         # Data_Error = Data_Error.sort_values(by=['error_Prediccion'], ascending=True)
 
-    rezagos = Data_Error.groupby("iteraccion").min("error_Prediccion")
+    rezagos = Data_Error.groupby("iteraccion").min()[["error_Prediccion"]]
+    #rezagos1 = Data_Error.groupby("iteraccion").min()
     rezagos = pd.merge(rezagos, Data_Error, on="error_Prediccion", how="left")
     rezagos = rezagos.groupby("Rezago").count()
     rezagos = rezagos.sort_values(by=['error_Prediccion'], ascending=False)
@@ -75,8 +76,8 @@ def model_Rezagos(Data_Modelo,Variables_Independientes,Variable_Dependiente,pred
     return rezagos
 
 def Datatest(rezagos,Data_Modelo):
-    datelist = pd.date_range(Data_Modelo["Fecha"].max() + timedelta(1), periods=10)
 
+    datelist = pd.date_range(Data_Modelo["Fecha"].max() + timedelta(1), periods=10)
     Data_test = pd.DataFrame(columns=rezagos)
 
     for daylist in datelist:
