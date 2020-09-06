@@ -13,6 +13,7 @@ def ModelData(DataX,DataY,ciudad,numberLag):
     DataY_city = DataY[DataY["ciudad_de_ubicaci_n"] == ciudad]
 
     infectados = DataX_city[["fecha_diagnostico", "id_de_caso"]]
+    #infectados = DataX_city[["fis", "id_de_caso"]]
     infectados.columns = ['Fecha', 'Numero_de_Infectados']
     recuperado = DataY_city[["fecha_recuperado", "id_de_caso"]]
     recuperado.columns = ['Fecha', 'Numero_de_Recuperados']
@@ -45,6 +46,7 @@ def model_Rezagos(Data_Modelo,Variables_Independientes,Variable_Dependiente,pred
     Data_Error = pd.DataFrame(columns=["Rezago", "error_Prediccion", "iteraccion"])
 
     for i in range(inicio, rowsdata):
+        #i =136
         train11 = Data_Modelo.iloc[0:i]
         test11 = Data_Modelo.iloc[i:i + predicciones]
         X_train = train11[Variables_Independientes]
@@ -53,6 +55,7 @@ def model_Rezagos(Data_Modelo,Variables_Independientes,Variable_Dependiente,pred
         y_test = test11[Variable_Dependiente]
         #print(i)
         for x in Variables_Independientes:
+           #x = Variables_Independientes[0]
             X_train1 = X_train[[x]]
             X_test1 = X_test[[x]]
             modelo = linear_model.LinearRegression()
@@ -110,6 +113,16 @@ def funpronostico(Data_Modelo_Test, Data_Modelo_Train,rezagos,Variables_Independ
     indexday = indexday.loc[:, indexday.columns != "index"]
     #indexday = indexday.iloc[:, [1, 2]]
     pronosticofinal = indexday.mean(axis=1, skipna=True)
+    desviacion = indexday.std(axis=1, skipna=True)
+    li = pronosticofinal-desviacion
+    li = li.to_frame()
+    ls = pronosticofinal + desviacion
+    ls = ls.to_frame()
+    pronosticofinal = pronosticofinal.to_frame()
+    pronosticofinal = pronosticofinal.merge(li, left_index=True, right_index=True)
+    pronosticofinal = pronosticofinal.merge(ls, left_index=True, right_index=True)
+    pronosticofinal.columns = ["Pronostico","LI","LS"]
+
     return pronosticofinal
 
 def PronosticosRecuperados(Infectados_history,Recuperados_history,ciudad,numberLag,predicciones):
@@ -135,8 +148,6 @@ def PronosticosRecuperados(Infectados_history,Recuperados_history,ciudad,numberL
                                Variable_Dependiente=Variable_Dependiente)
 
     fechas = pd.DataFrame({"Fecha": fechas})
-    Pronostico = Pronostico.to_frame()
-    Pronostico.columns = ["Pronostico"]
     Pronostico = fechas.merge(Pronostico, left_index=True, right_index=True)
     return Pronostico
 
@@ -176,7 +187,16 @@ def GeneracionPronsoticos_Recuperados(Infectados_history,Recuperados_history):
     return PronosticosBog,Pronosticosmed,Pronosticoscali,PronosticosBarra,PronosticosCarta
 
 
+###### PRUEBAS ######
 
+from StructureInformation import inputInformation
+
+Data_covid,Infectados_history, Recuperados_history,Muertes_history,Sintomas_history = inputInformation(url="www.datos.gov.co")
+PronosticosBog = PronosticosRecuperados(Infectados_history=Infectados_history,
+                                        Recuperados_history=Recuperados_history,
+                                        ciudad='Bogotá D.C.',
+                                        numberLag=25,
+                                        predicciones=10)
 
 
 

@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plot
 import seaborn as sns
 import numpy as np
+from StructureInformation import get_information
 
 def barplotciudades(Data_covid, pathsave,title):
     ciudadesinfectados = Data_covid.groupby("ciudad_de_ubicaci_n").count()["id_de_caso"].sort_values(
@@ -106,6 +107,10 @@ def plotsCiudad(Data_covid,pathsave,ciudad):
     plot_edad(Data_covid=muertos, pathsave=pathsave,
               name="Muertos", xasis="Edad", yaxis="Cantidad de Muertes", title="Muertes por Edad "+ ciudad)
     return valores
+
+
+
+
 
 
 

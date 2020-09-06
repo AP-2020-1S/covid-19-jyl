@@ -1,21 +1,53 @@
 from StructureInformation import inputInformation
-from StructureInformation import get_information
 import pandas as pd
 import numpy as np
 import seaborn as sns
+from ModelRecuperados import PronosticosRecuperados
+
+
+Data_covid,Infectados_history, Recuperados_history,Muertes_history,Sintomas_history = inputInformation(url="www.datos.gov.co")
 
 
 
-Infectados_history, Recuperados_history, Muertes_history = inputInformation(url="www.datos.gov.co")
-Data_covid = get_information(url="www.datos.gov.co",limit=40000000)
+Bogota = Sintomas_history[Sintomas_history["ciudad_de_ubicaci_n"] == 'Bogotá D.C.']
+Bogota["Ratio"] = Bogota["id_de_caso"]/Bogota['id_de_caso General']
+Bogota["Ratio<20"] = Bogota["< 20 Años"]/Bogota['< 20 Años General']
+Bogota["Ratio21-40"] = Bogota["21-40 Años"]/Bogota['21-30 Años General']
+Bogota["Ratio41-60"] = Bogota["41-60 Años"]/Bogota['41-60 Años General']
+Bogota["Ratio61-80"] = Bogota["61-80 Años"]/Bogota['61-80 Años General']
+Bogota["Ratio>80"] = Bogota["> 80 Años"]/Bogota['> 80 Años General']
 
-""""
-muertosostime = Data_covid[Data_covid["fecha_de_muerte"].notnull()]
-muertosostime = muertosostime[muertosostime["fis"].notnull()]
-muertosostime['fis'] = muertosostime['fis'].str[:10]
-muertosostime['fis'] =pd.to_datetime(muertosostime['fis'])
-muertosostime['fecha_de_muerte'] = muertosostime['fecha_de_muerte'].str[:10]
-muertosostime['fecha_de_muerte'] =pd.to_datetime(muertosostime['fecha_de_muerte'])
+
+
+
+
+
+muertos = Data_covid[Data_covid["fecha_de_muerte"].notnull()]
+muertos  =muertos[muertos["fis"] != 'Asintomático']
+
+muertos['fis'] = muertos['fis'].str[:10]
+muertos['fis'] =pd.to_datetime(muertos['fis'])
+muertos['fecha_de_muerte'] = muertos['fecha_de_muerte'].str[:10]
+muertos['fecha_de_muerte'] =pd.to_datetime(muertos['fecha_de_muerte'])
+muertos['tiempo'] =((muertos['fecha_de_muerte'] - muertos['fis'])/ np.timedelta64(1, 'D')).astype(int)
+
+
+filterCity=['Bogotá D.C.','Medellín','Cali','Barranquilla','Cartagena de Indias']
+muertos = muertos[muertos.ciudad_de_ubicaci_n.isin(filterCity)]
+
+
+Bogota = muertos[muertos["ciudad_de_ubicaci_n"] == 'Bogotá D.C.']
+
+Bogota = Bogota.groupby(["fecha_de_muerte", "ciudad_de_ubicaci_n"]).count()["id_de_caso"].reset_index()
+
+
+PronosticosRecuperados(Infectados_history = ,
+                       Recuperados_history = ,
+                       ciudad,numberLag,predicciones = )
+
+
+validacio = muertos[['tiempo','fecha_de_muerte','fis']]
+
 
 a =((muertosostime['fecha_de_muerte'] - muertosostime['fis'])/ np.timedelta64(1, 'D')).astype(int)
 
@@ -25,7 +57,7 @@ sns.distplot(a, hist=True, kde=True,
              hist_kws={'edgecolor':'black'},
              kde_kws={'linewidth': 4})
 
-"""
+
 
 MedeMuertes  =Muertes_history[Muertes_history["ciudad_de_ubicaci_n"] == 'Medellín']
 data = MedeMuertes["id_de_caso"].tolist()

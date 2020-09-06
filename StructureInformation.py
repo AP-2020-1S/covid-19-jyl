@@ -27,7 +27,7 @@ def filter_city_categorical_values(dataframe, filterCity):
         (data_frame_Covid_19['edad'] > 80)
     ]
 
-    values = ['< 20 Años', '21-30 Años', '41-60 Años', '61-80 Años', '> 80 Años']
+    values = ['< 20 Años', '21-40 Años', '41-60 Años', '61-80 Años', '> 80 Años']
 
     data_frame_Covid_19['EdadCate'] = np.select(conditions, values)
     data_frame_Covid_19 =castDate(data = data_frame_Covid_19,value = "fecha_de_notificaci_n")
@@ -54,25 +54,56 @@ def structuredata(dataframe,variable):
     result = pd.merge(nummbercase, numbercaseedada, on=[variable, 'ciudad_de_ubicaci_n'], how="left")
     return result
 
+def structuredata_Sintomas(Data_covid1):
+    fismuerte = Data_covid1[Data_covid1["fecha_de_muerte"].notnull()]
+    fismuerte = fismuerte[fismuerte["fis"] != 'Asintomático']
+    fismuerte['fis'] = fismuerte['fis'].str[:10]
+    fismuerte['fis'] = pd.to_datetime(fismuerte['fis'])
+
+    nummbercasefis = fismuerte.groupby(['fis', "ciudad_de_ubicaci_n"]).count()["id_de_caso"].reset_index()
+    ## numero_casos_edad
+    numbercaseedada = fismuerte.groupby(['fis', "ciudad_de_ubicaci_n", "EdadCate"]).count()["id_de_caso"].reset_index()
+    numbercaseedada = numbercaseedada.pivot_table(index=['fis', "ciudad_de_ubicaci_n"], columns="EdadCate",
+                                                  values="id_de_caso", aggfunc=np.sum,
+                                                  fill_value=0).reset_index()
+
+    result1 = pd.merge(nummbercasefis, numbercaseedada, on=['fis', 'ciudad_de_ubicaci_n'], how="left")
+
+    fisGeneral = Data_covid1[Data_covid1["fis"] != 'Asintomático']
+    fisGeneral['fis'] = fisGeneral['fis'].str[:10]
+    fisGeneral['fis'] = pd.to_datetime(fisGeneral['fis'])
+
+    nummbercasefisgene = fisGeneral.groupby(['fis', "ciudad_de_ubicaci_n"]).count()["id_de_caso"].reset_index()
+    ## numero_casos_edad
+    nummbercasedadfisgene = fisGeneral.groupby(['fis', "ciudad_de_ubicaci_n", "EdadCate"]).count()["id_de_caso"].reset_index()
+    nummbercasedadfisgene = nummbercasedadfisgene.pivot_table(index=['fis', "ciudad_de_ubicaci_n"], columns="EdadCate",
+                                                  values="id_de_caso", aggfunc=np.sum,
+                                                  fill_value=0).reset_index()
+    result2 = pd.merge(nummbercasefisgene, nummbercasedadfisgene, on=['fis', 'ciudad_de_ubicaci_n'], how="left")
+    result2.columns = ['fis', 'ciudad_de_ubicaci_n', 'id_de_caso General', '21-30 Años General', '41-60 Años General',
+       '61-80 Años General', '< 20 Años General', '> 80 Años General']
+
+    Resultadofinal = pd.merge(result1, result2, on=['fis', 'ciudad_de_ubicaci_n'], how="left")
+
+    return  Resultadofinal
+
+
 def inputInformation(url):
     print("Estamos obteniendo la informacion")
     Data_covid = get_information(url=url, limit=40000000)
-    Data_covid = filter_city_categorical_values(dataframe=Data_covid,
+    Data_covid1 = filter_city_categorical_values(dataframe=Data_covid,
                                                 filterCity=['Bogotá D.C.',
                                                             'Medellín',
                                                             'Cali',
                                                             'Barranquilla',
                                                             'Cartagena de Indias'])
 
-    Infectados_history = structuredata(dataframe=Data_covid, variable="fecha_diagnostico")
-    Recuperados_history = structuredata(dataframe=Data_covid, variable="fecha_recuperado")
-    Muertes_history = structuredata(dataframe=Data_covid, variable="fecha_de_muerte")
-    return  Infectados_history, Recuperados_history,Muertes_history
+    Infectados_history = structuredata(dataframe=Data_covid1, variable="fecha_diagnostico")
+    Recuperados_history = structuredata(dataframe=Data_covid1, variable="fecha_recuperado")
+    Muertes_history = structuredata(dataframe=Data_covid1, variable="fecha_de_muerte")
+    Sintomas_history = structuredata_Sintomas(Data_covid1=Data_covid1)
+    return Data_covid,Infectados_history, Recuperados_history,Muertes_history,Sintomas_history
 
 
-""""
-plt.plot(medellin.fecha_de_muerte,medellin.id_de_caso)
-plt.show()
-plt.savefig('fig/plot1.png')
-"""
+
 

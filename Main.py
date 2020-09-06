@@ -2,30 +2,19 @@ from ModelRecuperados import  GeneracionPronsoticos_Recuperados
 from StructureInformation import inputInformation
 from DescriptiveAndPlots import plotsCiudad
 from DescriptiveAndPlots import PlotsColombia
-from StructureInformation import get_information
-
-
-""""
-from jinja2 import Template
-str = open('Template/index.html', 'r').read()
-template = Template(str)
-str = template.render(muertos= 2000)
-open('index.html', 'w').write(str);
-"""
 
 
 if __name__ == "__main__":
 
-    Data_covid = get_information(url="www.datos.gov.co", limit=40000000)
+    Data_covid,Infectados_history, Recuperados_history,Muertes_history,Sintomas_history = inputInformation(url="www.datos.gov.co")
+    GeneracionPronsoticos_Recuperados(Infectados_history=Infectados_history, Recuperados_history=Recuperados_history)
+
     colombia = PlotsColombia(Data_covid=Data_covid)
     Medellin = plotsCiudad(Data_covid=Data_covid, pathsave='fig/Medellin/', ciudad="Medellín")
     Cali = plotsCiudad(Data_covid=Data_covid, pathsave='fig/Cali/', ciudad="Cali")
     bogota = plotsCiudad(Data_covid=Data_covid, pathsave='fig/Bogota/', ciudad='Bogotá D.C.')
     Barranquilla = plotsCiudad(Data_covid=Data_covid, pathsave='fig/Barranquilla/', ciudad="Barranquilla")
     Cartagena = plotsCiudad(Data_covid=Data_covid, pathsave='fig/Cartagena/', ciudad="Cartagena de Indias")
-
-    #Infectados_history, Recuperados_history, Muertes_history = inputInformation(url="www.datos.gov.co")
-    #GeneracionPronsoticos_Recuperados(Infectados_history = Infectados_history,Recuperados_history = Recuperados_history)
 
     from jinja2 import Template
 
