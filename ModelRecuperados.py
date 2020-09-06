@@ -198,6 +198,8 @@ PronosticosBog = PronosticosRecuperados(Infectados_history=Infectados_history,
                                         numberLag=25,
                                         predicciones=10)
 
+HYISTORICOBOG = Recuperados_history[Recuperados_history["ciudad_de_ubicaci_n"] == "Bogotá D.C."]
+HYISTORICOBOG = HYISTORICOBOG[["fecha_recuperado","id_de_caso"]]
 
 
 
