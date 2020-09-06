@@ -116,7 +116,7 @@ def pronosticosDeadCity(Sintomas_history,Muertes_history,ciudad):
 
     Pronos = pronosticosMuerte(DataModelMuertes = DataModelMuertes, rezagos = rezagos)
     return Pronos
-    #Data_covid, Infectados_history, Recuperados_history, Muertes_history, Sintomas_history = inputInformation(url="www.datos.gov.co")
+#Data_covid, Infectados_history, Recuperados_history, Muertes_history, Sintomas_history = inputInformation(url="www.datos.gov.co")
 
 def GeneracionPronsoticos_Muertos(Sintomas_history,Muertes_history):
     print("Estamos pronosticando")
@@ -165,24 +165,3 @@ def GeneracionPronsoticos_Muertos(Sintomas_history,Muertes_history):
     return pronosticosBog, pronosticosMed, pronosticosCali, pronosticosBarra, pronosticosCarta
 
 
-"""
-from StructureInformation import inputInformation
-
-Data_covid,Infectados_history, Recuperados_history,Muertes_history,Sintomas_history = inputInformation(url="www.datos.gov.co")
-
-pronostico = pronosticosDeadCity(Sintomas_history=Sintomas_history,
-                                         Muertes_history=Muertes_history,
-                                         ciudad='Bogotá D.C.')
-
-serie_completa = Muertes_history[Muertes_history["ciudad_de_ubicaci_n"] == "Bogotá D.C."]
-serie_completa = serie_completa[["fecha_de_muerte","id_de_caso"]]
-
-
-plot.figure(figsize=(16, 8))
-plot.plot(serie_completa["fecha_de_muerte"], serie_completa["id_de_caso"], color="lightseagreen", label="Serie Real",linewidth=2.5)
-plot.plot(pronostico["Fecha"], pronostico["Pronostico"], color="salmon", label="Pronóstico", linewidth=2.5)
-plot.legend(loc="best")
-g = plot.axvline(x=pronostico["Fecha"][0], color='dimgray', linewidth=1, linestyle="dashed")
-g.get_figure().savefig("fig/Pronosticos/Bogota/Muertos.png")
-plot.show()
-"""
