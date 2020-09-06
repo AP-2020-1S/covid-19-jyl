@@ -108,9 +108,33 @@ def plotsCiudad(Data_covid,pathsave,ciudad):
               name="Muertos", xasis="Edad", yaxis="Cantidad de Muertes", title="Muertes por Edad "+ ciudad)
     return valores
 
+def grafica_series_recuperado(Recuperados_history,pronostico,ciudad,ciudad_name,tipo_pronostico):
+    serie_completa = Recuperados_history[Recuperados_history["ciudad_de_ubicaci_n"] == ciudad]
+    serie_completa = serie_completa[["fecha_recuperado", "id_de_caso"]]
+    plot.figure()
+    plot.figure(figsize=(16,8))
+    plot.plot(serie_completa["fecha_recuperado"],serie_completa["id_de_caso"],color="lightseagreen",label="Serie Real",linewidth=2.5)
+    plot.plot(pronostico["Fecha"],pronostico["Pronostico"],color="salmon",label="Pronóstico",linewidth=2.5)
+    plot.legend(loc="best")
+    g=plot.axvline(x=pronostico["Fecha"][0],color='dimgray',linewidth = 1, linestyle = "dashed")
+    #plot.show()
+    g.get_figure().savefig("fig/Pronosticos/"+ciudad_name+"/"+tipo_pronostico + '.png')
+    plot.figure()
+    print("grafico guardado")
 
-
-
+def grafica_series_muerte(Muertes_history,pronostico,ciudad,ciudad_name,tipo_pronostico):
+    serie_completa = Muertes_history[Muertes_history["ciudad_de_ubicaci_n"] == ciudad]
+    serie_completa = serie_completa[["fecha_de_muerte", "id_de_caso"]]
+    plot.figure()
+    plot.figure(figsize=(16,8))
+    plot.plot(serie_completa["fecha_de_muerte"],serie_completa["id_de_caso"],color="lightseagreen",label="Serie Real",linewidth=2.5)
+    plot.plot(pronostico["Fecha"],pronostico["Pronostico"],color="salmon",label="Pronóstico",linewidth=2.5)
+    plot.legend(loc="best")
+    g=plot.axvline(x=pronostico["Fecha"][0],color='dimgray',linewidth = 1, linestyle = "dashed")
+    #plot.show()
+    g.get_figure().savefig("fig/Pronosticos/"+ciudad_name+"/"+tipo_pronostico + '.png')
+    plot.figure()
+    print("grafico guardado")
 
 
 

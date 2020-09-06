@@ -3,6 +3,8 @@ import pandas as pd
 import numpy as np
 from datetime import timedelta
 import re
+import matplotlib.pylab as plot
+from DescriptiveAndPlots import grafica_series_recuperado
 
 
 ###################### modelo Regresion rezagos###############
@@ -43,7 +45,7 @@ def model_Rezagos(Data_Modelo,Variables_Independientes,Variable_Dependiente,pred
     rowsdata = Data_Modelo.shape[0] - predicciones + 1
     inicio = rowsdata - 10
 
-    Data_Error = pd.DataFrame(columns=["Rezago", "error_Prediccion", "iteraccion"])
+    Data_Error = pd.DataFrame(columns=["Rezago","error_Prediccion","iteraccion"])
 
     for i in range(inicio, rowsdata):
         #i =136
@@ -68,6 +70,7 @@ def model_Rezagos(Data_Modelo,Variables_Independientes,Variable_Dependiente,pred
         # Data_Error = Data_Error.sort_values(by=['error_Prediccion'], ascending=True)
 
     rezagos = Data_Error.groupby("iteraccion").min()[["error_Prediccion"]]
+
     #rezagos1 = Data_Error.groupby("iteraccion").min()
     rezagos = pd.merge(rezagos, Data_Error, on="error_Prediccion", how="left")
     rezagos = rezagos.groupby("Rezago").count()
@@ -161,11 +164,18 @@ def GeneracionPronsoticos_Recuperados(Infectados_history,Recuperados_history):
                                             numberLag=25,
                                             predicciones=10)
 
+    grafica_series_recuperado(Recuperados_history=Recuperados_history, pronostico=PronosticosBog,ciudad='Bogotá D.C.',ciudad_name="Bogota",
+                   tipo_pronostico="Recuperados")
+
     Pronosticosmed = PronosticosRecuperados(Infectados_history=Infectados_history,
                                             Recuperados_history=Recuperados_history,
                                             ciudad='Medellín',
                                             numberLag=25,
                                             predicciones=10)
+
+    grafica_series_recuperado(Recuperados_history=Recuperados_history, pronostico=Pronosticosmed, ciudad='Medellín',
+                   ciudad_name="Medellin",
+                   tipo_pronostico="Recuperados")
 
     Pronosticoscali = PronosticosRecuperados(Infectados_history=Infectados_history,
                                              Recuperados_history=Recuperados_history,
@@ -173,26 +183,39 @@ def GeneracionPronsoticos_Recuperados(Infectados_history,Recuperados_history):
                                              numberLag=25,
                                              predicciones=10)
 
+    grafica_series_recuperado(Recuperados_history=Recuperados_history, pronostico=Pronosticoscali, ciudad='Cali',
+                   ciudad_name="Cali",
+                   tipo_pronostico="Recuperados")
+
     PronosticosBarra = PronosticosRecuperados(Infectados_history=Infectados_history,
                                               Recuperados_history=Recuperados_history,
                                               ciudad='Barranquilla',
                                               numberLag=25,
                                               predicciones=10)
 
+    grafica_series_recuperado(Recuperados_history=Recuperados_history, pronostico=PronosticosBarra, ciudad='Barranquilla',
+                   ciudad_name="Barranquilla",
+                   tipo_pronostico="Recuperados")
+
     PronosticosCarta = PronosticosRecuperados(Infectados_history=Infectados_history,
                                               Recuperados_history=Recuperados_history,
                                               ciudad='Cartagena de Indias',
                                               numberLag=25,
                                               predicciones=10)
+
+    grafica_series_recuperado(Recuperados_history=Recuperados_history, pronostico=PronosticosCarta, ciudad='Cartagena de Indias',
+                   ciudad_name="Cartagena",
+                   tipo_pronostico="Recuperados")
     print("Pronosticos realizados")
     return PronosticosBog,Pronosticosmed,Pronosticoscali,PronosticosBarra,PronosticosCarta
 
 
 ###### PRUEBAS ######
 
-from StructureInformation import inputInformation
-
+#from StructureInformation import inputInformation
+""" 
 Data_covid,Infectados_history, Recuperados_history,Muertes_history,Sintomas_history = inputInformation(url="www.datos.gov.co")
+
 PronosticosBog = PronosticosRecuperados(Infectados_history=Infectados_history,
                                         Recuperados_history=Recuperados_history,
                                         ciudad='Bogotá D.C.',
@@ -202,5 +225,22 @@ PronosticosBog = PronosticosRecuperados(Infectados_history=Infectados_history,
 HYISTORICOBOG = Recuperados_history[Recuperados_history["ciudad_de_ubicaci_n"] == "Bogotá D.C."]
 HYISTORICOBOG = HYISTORICOBOG[["fecha_recuperado","id_de_caso"]]
 
+#Grafica
 
+def grafica_series(Recuperados_history,pronostico,ciudad,ciudad_name,tipo_pronostico):
+    serie_completa = Recuperados_history[Recuperados_history["ciudad_de_ubicaci_n"] == ciudad]
+    serie_completa = serie_completa[["fecha_recuperado", "id_de_caso"]]
+    plt.figure()
+    plt.figure(figsize=(16,8))
+    plt.plot(serie_completa["fecha_recuperado"],serie_completa["id_de_caso"],color="lightseagreen",label="Serie Real",linewidth=2.5)
+    plt.plot(pronostico["Fecha"],pronostico["Pronostico"],color="salmon",label="Pronóstico",linewidth=2.5)
+    plt.legend(loc="best")
+    g=plt.axvline(x=pronostico["Fecha"][0],color='dimgray',linewidth = 1, linestyle = "dashed")
+    plt.show()
+    g.get_figure().savefig("fig/Pronosticos/"+ciudad_name+"/"+tipo_pronostico + '.png')
+    plt.figure()
+    print("grafico guardado")
+
+grafica_series(serie_completa=Recuperados_history,pronostico=PronosticosBog)
+"""
 
