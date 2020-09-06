@@ -1,149 +1,144 @@
 from StructureInformation import inputInformation
+from sklearn import  linear_model
 import pandas as pd
 import numpy as np
-import seaborn as sns
-from ModelRecuperados import PronosticosRecuperados
+from datetime import timedelta
 
+
+def error_cuadratico(estimador, x,y_real):
+    y_pred = estimador.predict(x)
+    return np.sum((y_real - y_pred)**2/len(y_real))
+
+def BaseModeloMuertes(Sintomas_history,Muertes_history,ciudad):
+
+    x = Sintomas_history[Sintomas_history["ciudad_de_ubicaci_n"] == ciudad]
+    datex = x[["fis"]]
+
+    x["Ratio"] = x["id_de_caso"] / x['id_de_caso General']
+    x["Ratio<20"] = x["< 20 Años"] / x['< 20 Años General']
+    x["Ratio21-40"] = x["21-40 Años"] / x['21-30 Años General']
+    x["Ratio41-60"] = x["41-60 Años"] / x['41-60 Años General']
+    x["Ratio61-80"] = x["61-80 Años"] / x['61-80 Años General']
+    x["Ratio>80"] = x["> 80 Años"] / x['> 80 Años General']
+
+    x = x[['Ratio<20',
+           'Ratio21-40', 'Ratio41-60', 'Ratio61-80', 'Ratio>80']]
+    x = x.fillna(0)
+
+    pesosedad = x.mean(axis=0, skipna=True)
+    y = Muertes_history[Muertes_history["ciudad_de_ubicaci_n"] == ciudad]
+    y = y[['fecha_de_muerte', 'id_de_caso']]
+    y.columns = ['fecha', 'Muertes']
+    x_ponder = Sintomas_history[Sintomas_history["ciudad_de_ubicaci_n"] == ciudad]
+    matrix_ponde = x_ponder[['21-40 Años', '41-60 Años', '61-80 Años', '< 20 Años', '> 80 Años']]
+    pesosedad.index = matrix_ponde.columns
+    x_ponder = matrix_ponde.mul(pesosedad, axis=1)
+    X = pd.concat([datex, x_ponder], axis=1)
+    X = X.fillna(0)
+    X.columns = ['fecha', '21-40 Años', '41-60 Años', '61-80 Años', '< 20 Años', '> 80 Años']
+    X = pd.merge(X, y, on=['fecha'], how="left")
+    X = X.dropna()
+    return X
+
+def TrainMuertes(DataModelMuertes,predicciones,iniciogenerador):
+    x = DataModelMuertes[['21-40 Años', '41-60 Años', '61-80 Años', '< 20 Años', '> 80 Años']]
+    y = DataModelMuertes[['Muertes']]
+    rowsdata = x.shape[0] - predicciones
+    inicio = rowsdata - iniciogenerador
+
+    Data_Error = pd.DataFrame(columns=["Rezago", "error_Prediccion", "iteraccion"])
+    for rezago in range(10, 19):
+        for i in range(inicio, rowsdata):
+            Xtrain = x.iloc[0:i]
+            Ytrain = y.iloc[rezago:i + rezago]
+            Xtest = x.iloc[i:i + predicciones]
+            Ytest = y.iloc[i + predicciones:i + predicciones + predicciones]
+            if Xtest.shape[0] == Ytest.shape[0]:
+                modelo = linear_model.LinearRegression()
+                modelo = modelo.fit(Xtrain, Ytrain)
+                error = error_cuadratico(estimador=modelo, x=Xtest, y_real=Ytest)
+                value = pd.DataFrame({"Rezago": rezago,
+                                      "error_Prediccion": error, "iteraccion": i})
+                Data_Error = Data_Error.append(value, ignore_index=False)
+
+    rezagos = Data_Error.groupby("Rezago").mean()[["error_Prediccion"]]
+    rezagos["Rezago"] = rezagos.index
+    rezagos = rezagos.sort_values(by=['error_Prediccion'], ascending=True)
+    rezagos = rezagos.index.tolist()[0:4]
+    return  rezagos
+
+def pronosticosMuerte(DataModelMuertes, rezagos):
+    datelist = pd.date_range(DataModelMuertes["fecha"].max() + timedelta(1), periods=10)
+
+    indexday = pd.DataFrame({"index": range(1, 11)})
+
+    for re1 in rezagos:
+        x = DataModelMuertes[['21-40 Años', '41-60 Años', '61-80 Años', '< 20 Años', '> 80 Años']]
+        y = DataModelMuertes[['Muertes']]
+
+        rowdata = x.shape[0]
+
+        Xtrain = x.iloc[0:rowdata - re1]
+        Ytrain = y.iloc[0 + re1:rowdata]
+        Xtest = x.iloc[rowdata - re1:rowdata]
+
+        modelo = linear_model.LinearRegression()
+        modelo = modelo.fit(Xtrain, Ytrain)
+        y_pred = modelo.predict(Xtest)
+
+        y_pred1 = [x[0] for x in y_pred]
+        y_pred = pd.DataFrame({re1: y_pred1})
+        indexday = indexday.merge(y_pred, left_index=True, right_index=True)
+
+    indexday = indexday.loc[:, indexday.columns != "index"]
+    pronosticofinal = indexday.mean(axis=1, skipna=True)
+    desviacion = indexday.std(axis=1, skipna=True)
+    li = pronosticofinal - desviacion
+    li = li.to_frame()
+    ls = pronosticofinal + desviacion
+    ls = ls.to_frame()
+    pronosticofinal = pronosticofinal.to_frame()
+    pronosticofinal = pronosticofinal.merge(li, left_index=True, right_index=True)
+    pronosticofinal = pronosticofinal.merge(ls, left_index=True, right_index=True)
+    pronosticofinal.columns = ["Pronostico", "LI", "LS"]
+    fechas = pd.DataFrame({"Fecha": datelist})
+    pronosticofinal = fechas.merge(pronosticofinal, left_index=True, right_index=True)
+    return pronosticofinal
+
+def pronosticosDeadCity(Sintomas_history,Muertes_history,ciudad):
+    DataModelMuertes = BaseModeloMuertes(Sintomas_history=Sintomas_history, Muertes_history=Muertes_history,
+                                         ciudad=ciudad)
+    rezagos = TrainMuertes(DataModelMuertes=DataModelMuertes, predicciones=10, iniciogenerador=50)
+    Pronos = pronosticosMuerte(DataModelMuertes = DataModelMuertes, rezagos = rezagos)
+    return Pronos
 
 Data_covid,Infectados_history, Recuperados_history,Muertes_history,Sintomas_history = inputInformation(url="www.datos.gov.co")
 
+pronosticosBog = pronosticosDeadCity(Sintomas_history =Sintomas_history,
+                                   Muertes_history = Muertes_history,
+                                   ciudad = 'Bogotá D.C.')
 
-
-Bogota = Sintomas_history[Sintomas_history["ciudad_de_ubicaci_n"] == 'Bogotá D.C.']
-Bogota["Ratio"] = Bogota["id_de_caso"]/Bogota['id_de_caso General']
-Bogota["Ratio<20"] = Bogota["< 20 Años"]/Bogota['< 20 Años General']
-Bogota["Ratio21-40"] = Bogota["21-40 Años"]/Bogota['21-30 Años General']
-Bogota["Ratio41-60"] = Bogota["41-60 Años"]/Bogota['41-60 Años General']
-Bogota["Ratio61-80"] = Bogota["61-80 Años"]/Bogota['61-80 Años General']
-Bogota["Ratio>80"] = Bogota["> 80 Años"]/Bogota['> 80 Años General']
-
-
-
-
-
-
-muertos = Data_covid[Data_covid["fecha_de_muerte"].notnull()]
-muertos  =muertos[muertos["fis"] != 'Asintomático']
-
-muertos['fis'] = muertos['fis'].str[:10]
-muertos['fis'] =pd.to_datetime(muertos['fis'])
-muertos['fecha_de_muerte'] = muertos['fecha_de_muerte'].str[:10]
-muertos['fecha_de_muerte'] =pd.to_datetime(muertos['fecha_de_muerte'])
-muertos['tiempo'] =((muertos['fecha_de_muerte'] - muertos['fis'])/ np.timedelta64(1, 'D')).astype(int)
-
-
-filterCity=['Bogotá D.C.','Medellín','Cali','Barranquilla','Cartagena de Indias']
-muertos = muertos[muertos.ciudad_de_ubicaci_n.isin(filterCity)]
-
-
-Bogota = muertos[muertos["ciudad_de_ubicaci_n"] == 'Bogotá D.C.']
-
-Bogota = Bogota.groupby(["fecha_de_muerte", "ciudad_de_ubicaci_n"]).count()["id_de_caso"].reset_index()
-
-
-PronosticosRecuperados(Infectados_history = ,
-                       Recuperados_history = ,
-                       ciudad,numberLag,predicciones = )
-
-
-validacio = muertos[['tiempo','fecha_de_muerte','fis']]
-
-
-a =((muertosostime['fecha_de_muerte'] - muertosostime['fis'])/ np.timedelta64(1, 'D')).astype(int)
-
-
-sns.distplot(a, hist=True, kde=True,
-             bins=int(180/5), color = 'darkblue',
-             hist_kws={'edgecolor':'black'},
-             kde_kws={'linewidth': 4})
-
-
-
-MedeMuertes  =Muertes_history[Muertes_history["ciudad_de_ubicaci_n"] == 'Medellín']
-data = MedeMuertes["id_de_caso"].tolist()
-
-
-
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-import math
-
-
-plt.figure(figsize=(14,5))
-plt.plot(data, '.-k')
-plt.grid()
-
-# linea vertical para dividir el entrenamiento
-# del pronóstico
-plt.plot([len(data)-24, len(data)-24], [min(data), max(data)], '--', linewidth=2);
+pronosticosMed = pronosticosDeadCity(Sintomas_history =Sintomas_history,
+                                   Muertes_history = Sintomas_history,
+                                   ciudad = 'Bogotá D.C.')
+pronosticosCali = pronosticosDeadCity(Sintomas_history =Sintomas_history,
+                                   Muertes_history = Sintomas_history,
+                                   ciudad = 'Bogotá D.C.')
+pronosticosBog = pronosticosDeadCity(Sintomas_history =Sintomas_history,
+                                   Muertes_history = Sintomas_history,
+                                   ciudad = 'Bogotá D.C.')
 
 
 
 
-from sklearn.preprocessing import MinMaxScaler
-
-# crea el transformador
-scaler = MinMaxScaler()
-
-# escala la serie
-data_scaled = scaler.fit_transform( np.array(data).reshape(-1, 1))
-# z es un array de listas como efecto
-# del escalamiento
-data_scaled = [u[0] for u in data_scaled]
-
-plt.figure(figsize=(14,5))
-plt.plot(data_scaled, '.-k')
-plt.grid()
-plt.plot([len(data_scaled)-24, len(data_scaled)-24], [min(data_scaled), max(data_scaled)], '--', linewidth=2);
-
-len(data)
-
-
-P = 13
-
-X = []
-for t in range(P-1, 79-1):
-    X.append([data_scaled[t-n] for n in range(P) ])
-
-observed_scaled = data_scaled[P:]
-
-len(X)
 
 
 
-from sklearn.neural_network import MLPRegressor
 
-np.random.seed(123456)
 
-H = 1 # Se escoge arbitrariamente
 
-mlp = MLPRegressor(
-    hidden_layer_sizes=(H, ),
-    activation = 'logistic',
-    learning_rate = 'adaptive',
-    momentum = 0.0,
-    learning_rate_init = 0.1,
-    max_iter = 10000)
 
-# Entrenamiento
-mlp.fit(
-    X[0:215],  # 239 - 24 = 215
-    observed_scaled[0:215]
-)
 
-# Pronostico
-y_scaled_m1 = mlp.predict(X)
 
-plt.figure(figsize=(14,5))
-plt.plot(data_scaled, '.-k')
-plt.grid()
 
-# No hay pronóstico para los primeros 13 valores
-# de la serie
-plt.plot([None] * P + y_scaled_m1.tolist(), '-r');
 
-# linea vertical para dividir el entrenamiento
-# del pronóstico. Se ubica en el ultimo dato
-# usando para entrenamiento
-plt.plot([len(data_scaled)-24, len(data_scaled)-24], [min(data_scaled), max(data_scaled)], '--', linewidth=2);

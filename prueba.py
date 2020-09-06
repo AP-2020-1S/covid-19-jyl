@@ -133,3 +133,14 @@ fig.add_trace(go.Scatter(x=t, y=I,mode='lines',name='Infected'))
 fig.add_trace(go.Scatter(x=t, y=S,mode='lines',name='suscep'))
 fig.add_trace(go.Scatter(x=t, y=R,mode='lines',name='recuper'))
 fig.show()
+
+df = pd.DataFrame([[0, 1, -2, -1], [1, 1, 1, 1]])
+s = pd.Series([1, 1, 2, 1])
+df.dot(s)
+
+
+import pandas as pd
+x = pd.DataFrame({0: [1,2,3], 1: [4,5,6], 2: [7,8,9] })
+y = pd.Series([-1, 1, -1])
+
+new_x = x.mul(y, axis=0)
