@@ -3,8 +3,8 @@ import pandas as pd
 import numpy as np
 from datetime import timedelta
 import re
-import matplotlib.pylab as plt
-from DescriptiveAndPlots import grafica_series
+import matplotlib.pylab as plot
+from DescriptiveAndPlots import grafica_series_recuperado
 
 
 ###################### modelo Regresion rezagos###############
@@ -164,7 +164,7 @@ def GeneracionPronsoticos_Recuperados(Infectados_history,Recuperados_history):
                                             numberLag=25,
                                             predicciones=10)
 
-    grafica_series(Recuperados_history=Recuperados_history, pronostico=PronosticosBog,ciudad='Bogotá D.C.',ciudad_name="Bogota",
+    grafica_series_recuperado(Recuperados_history=Recuperados_history, pronostico=PronosticosBog,ciudad='Bogotá D.C.',ciudad_name="Bogota",
                    tipo_pronostico="Recuperados")
 
     Pronosticosmed = PronosticosRecuperados(Infectados_history=Infectados_history,
@@ -173,7 +173,7 @@ def GeneracionPronsoticos_Recuperados(Infectados_history,Recuperados_history):
                                             numberLag=25,
                                             predicciones=10)
 
-    grafica_series(Recuperados_history=Recuperados_history, pronostico=Pronosticosmed, ciudad='Medellín',
+    grafica_series_recuperado(Recuperados_history=Recuperados_history, pronostico=Pronosticosmed, ciudad='Medellín',
                    ciudad_name="Medellin",
                    tipo_pronostico="Recuperados")
 
@@ -183,7 +183,7 @@ def GeneracionPronsoticos_Recuperados(Infectados_history,Recuperados_history):
                                              numberLag=25,
                                              predicciones=10)
 
-    grafica_series(Recuperados_history=Recuperados_history, pronostico=Pronosticoscali, ciudad='Cali',
+    grafica_series_recuperado(Recuperados_history=Recuperados_history, pronostico=Pronosticoscali, ciudad='Cali',
                    ciudad_name="Cali",
                    tipo_pronostico="Recuperados")
 
@@ -193,7 +193,7 @@ def GeneracionPronsoticos_Recuperados(Infectados_history,Recuperados_history):
                                               numberLag=25,
                                               predicciones=10)
 
-    grafica_series(Recuperados_history=Recuperados_history, pronostico=PronosticosBarra, ciudad='Barranquilla',
+    grafica_series_recuperado(Recuperados_history=Recuperados_history, pronostico=PronosticosBarra, ciudad='Barranquilla',
                    ciudad_name="Barranquilla",
                    tipo_pronostico="Recuperados")
 
@@ -203,7 +203,7 @@ def GeneracionPronsoticos_Recuperados(Infectados_history,Recuperados_history):
                                               numberLag=25,
                                               predicciones=10)
 
-    grafica_series(Recuperados_history=Recuperados_history, pronostico=PronosticosCarta, ciudad='Cartagena de Indias',
+    grafica_series_recuperado(Recuperados_history=Recuperados_history, pronostico=PronosticosCarta, ciudad='Cartagena de Indias',
                    ciudad_name="Cartagena",
                    tipo_pronostico="Recuperados")
     print("Pronosticos realizados")

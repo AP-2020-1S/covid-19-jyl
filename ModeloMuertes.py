@@ -3,6 +3,8 @@ from sklearn import  linear_model
 import pandas as pd
 import numpy as np
 from datetime import timedelta
+import matplotlib.pylab as plot
+from DescriptiveAndPlots import grafica_series_muerte
 
 
 def error_cuadratico(estimador, x,y_real):
@@ -106,39 +108,81 @@ def pronosticosMuerte(DataModelMuertes, rezagos):
     return pronosticofinal
 
 def pronosticosDeadCity(Sintomas_history,Muertes_history,ciudad):
+
     DataModelMuertes = BaseModeloMuertes(Sintomas_history=Sintomas_history, Muertes_history=Muertes_history,
                                          ciudad=ciudad)
     rezagos = TrainMuertes(DataModelMuertes=DataModelMuertes, predicciones=10, iniciogenerador=50)
+
+
     Pronos = pronosticosMuerte(DataModelMuertes = DataModelMuertes, rezagos = rezagos)
     return Pronos
+    #Data_covid, Infectados_history, Recuperados_history, Muertes_history, Sintomas_history = inputInformation(url="www.datos.gov.co")
+
+def GeneracionPronsoticos_Muertos(Sintomas_history,Muertes_history):
+    print("Estamos pronosticando")
+
+    pronosticosBog = pronosticosDeadCity(Sintomas_history=Sintomas_history,
+                                         Muertes_history=Muertes_history,
+                                         ciudad='Bogotá D.C.')
+
+    grafica_series_muerte(Muertes_history=Muertes_history, pronostico=pronosticosBog, ciudad='Bogotá D.C.',
+                   ciudad_name="Bogota",
+                   tipo_pronostico="Muertos")
+
+    pronosticosMed = pronosticosDeadCity(Sintomas_history=Sintomas_history,
+                                         Muertes_history=Muertes_history,
+                                         ciudad='Medellín')
+
+    grafica_series_muerte(Muertes_history=Muertes_history, pronostico=pronosticosMed, ciudad='Medellín',
+                   ciudad_name="Medellin",
+                   tipo_pronostico="Muertos")
+
+    pronosticosCali = pronosticosDeadCity(Sintomas_history=Sintomas_history,
+                                          Muertes_history=Muertes_history,
+                                          ciudad='Cali')
+
+    grafica_series_muerte(Muertes_history=Muertes_history, pronostico=pronosticosCali, ciudad='Cali',
+                   ciudad_name="Cali",
+                   tipo_pronostico="Muertos")
+
+    pronosticosBarra = pronosticosDeadCity(Sintomas_history=Sintomas_history,
+                                           Muertes_history=Muertes_history,
+                                           ciudad='Barranquilla')
+
+    grafica_series_muerte(Muertes_history=Muertes_history, pronostico=pronosticosBarra, ciudad='Barranquilla',
+                   ciudad_name="Barranquilla",
+                   tipo_pronostico="Muertos")
+
+    pronosticosCarta = pronosticosDeadCity(Sintomas_history=Sintomas_history,
+                                           Muertes_history=Muertes_history,
+                                           ciudad='Cartagena de Indias')
+
+    grafica_series_muerte(Muertes_history=Muertes_history, pronostico=pronosticosCarta, ciudad='Cartagena de Indias',
+                   ciudad_name="Cartagena",
+                   tipo_pronostico="Muertos")
+
+    print("Pronosticos realizados")
+    return pronosticosBog, pronosticosMed, pronosticosCali, pronosticosBarra, pronosticosCarta
+
+
+"""
+from StructureInformation import inputInformation
 
 Data_covid,Infectados_history, Recuperados_history,Muertes_history,Sintomas_history = inputInformation(url="www.datos.gov.co")
 
-pronosticosBog = pronosticosDeadCity(Sintomas_history =Sintomas_history,
-                                   Muertes_history = Muertes_history,
-                                   ciudad = 'Bogotá D.C.')
+pronostico = pronosticosDeadCity(Sintomas_history=Sintomas_history,
+                                         Muertes_history=Muertes_history,
+                                         ciudad='Bogotá D.C.')
 
-pronosticosMed = pronosticosDeadCity(Sintomas_history =Sintomas_history,
-                                   Muertes_history = Sintomas_history,
-                                   ciudad = 'Bogotá D.C.')
-pronosticosCali = pronosticosDeadCity(Sintomas_history =Sintomas_history,
-                                   Muertes_history = Sintomas_history,
-                                   ciudad = 'Bogotá D.C.')
-pronosticosBog = pronosticosDeadCity(Sintomas_history =Sintomas_history,
-                                   Muertes_history = Sintomas_history,
-                                   ciudad = 'Bogotá D.C.')
+serie_completa = Muertes_history[Muertes_history["ciudad_de_ubicaci_n"] == "Bogotá D.C."]
+serie_completa = serie_completa[["fecha_de_muerte","id_de_caso"]]
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+plot.figure(figsize=(16, 8))
+plot.plot(serie_completa["fecha_de_muerte"], serie_completa["id_de_caso"], color="lightseagreen", label="Serie Real",linewidth=2.5)
+plot.plot(pronostico["Fecha"], pronostico["Pronostico"], color="salmon", label="Pronóstico", linewidth=2.5)
+plot.legend(loc="best")
+g = plot.axvline(x=pronostico["Fecha"][0], color='dimgray', linewidth=1, linestyle="dashed")
+g.get_figure().savefig("fig/Pronosticos/Bogota/Muertos.png")
+plot.show()
+"""
