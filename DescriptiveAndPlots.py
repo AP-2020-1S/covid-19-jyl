@@ -1,35 +1,21 @@
 import matplotlib.pyplot as plot
 import seaborn as sns
 import numpy as np
-from StructureInformation import get_information
 
 def barplotciudades(Data_covid, pathsave,title):
     ciudadesinfectados = Data_covid.groupby("ciudad_de_ubicaci_n").count()["id_de_caso"].sort_values(
         ascending=False).head(10)
     ciudadesinfectados = ciudadesinfectados.reset_index()
     ciudadesinfectados.columns = ["Ciudad", "Cantidad de infectados"]
-    plot.figure()
-    sns.set_style("darkgrid")
-    bar_plot = sns.barplot(x=ciudadesinfectados["Ciudad"], y=ciudadesinfectados["Cantidad de infectados"],
-                           palette="muted" ).set_title(title)
-
-
-    bar_plot.get_figure().savefig( pathsave+  '.png')
+    ciudadesinfectados = ciudadesinfectados.sort_values(by=['Cantidad de infectados'], ascending=True)
+    plot.figure(figsize=(14,10.5))
+    bar=plot.barh(ciudadesinfectados["Ciudad"], ciudadesinfectados["Cantidad de infectados"])
+    plot.title(title)
+    bar[0].get_figure().savefig(pathsave+'.png')
     plot.figure()
     print("grafico ciudades guardado")
 
 def pieplotsexo(Data_covid,pathsave,name):
-    conditions = [
-        (Data_covid['sexo'] == "F"),
-        (Data_covid['sexo'] == "f"),
-        (Data_covid['sexo'] == "M"),
-        (Data_covid['sexo'] == "m"),
-    ]
-
-    values = ['Femenino', 'Femenino', 'Masculino', 'Masculino']
-
-    Data_covid['sexo'] = np.select(conditions, values)
-
     sexo = Data_covid.groupby("sexo").count()["id_de_caso"].reset_index()
 
 
@@ -136,7 +122,6 @@ def grafica_series_muerte(Muertes_history,pronostico,ciudad,ciudad_name,tipo_pro
     plot.figure()
     print("grafico guardado")
 
-
 def grafica_series_infectados(Infectados_history,pronostico,ciudad,ciudad_name,tipo_pronostico):
     serie_completa = Infectados_history[Infectados_history["ciudad_de_ubicaci_n"] == ciudad]
     serie_completa = serie_completa[["fecha_diagnostico", "id_de_caso"]]
@@ -151,6 +136,19 @@ def grafica_series_infectados(Infectados_history,pronostico,ciudad,ciudad_name,t
     plot.figure()
     print("grafico guardado")
 
-
+def grafica_series_activos(acumulado,ciudad_name,tipo_pronostico):
+    nrow=acumulado.shape[0]
+    pronostico=acumulado.iloc[nrow-10:nrow]
+    serie_completa = acumulado.iloc[0:nrow-10]
+    plot.figure()
+    plot.figure(figsize=(16,8))
+    plot.plot(serie_completa["fecha"],serie_completa["Activos"],color="lightseagreen",label="Serie Real",linewidth=2.5)
+    plot.plot(pronostico["fecha"],pronostico["Activos"],color="salmon",label="Pronóstico",linewidth=2.5)
+    plot.legend(loc="best")
+    g=plot.axvline(x=pronostico["fecha"].tolist()[0],color='dimgray',linewidth = 1, linestyle = "dashed")
+    #plot.show()
+    g.get_figure().savefig("fig/Pronosticos/"+ciudad_name+"/"+tipo_pronostico + '.png')
+    plot.figure()
+    print("grafico guardado")
 
 
