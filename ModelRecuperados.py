@@ -1,11 +1,12 @@
-from sklearn import  linear_model
+from sodapy import Socrata
 import pandas as pd
 import numpy as np
 from datetime import timedelta
 import re
-import matplotlib.pylab as plot
+import pandas as pd
+from sodapy import Socrata
+import numpy as np
 from DescriptiveAndPlots import grafica_series_recuperado
-
 
 ###################### modelo Regresion rezagos###############
 
@@ -45,7 +46,7 @@ def model_Rezagos(Data_Modelo,Variables_Independientes,Variable_Dependiente,pred
     rowsdata = Data_Modelo.shape[0] - predicciones + 1
     inicio = rowsdata - 10
 
-    Data_Error = pd.DataFrame(columns=["Rezago","error_Prediccion","iteraccion"])
+    Data_Error = pd.DataFrame(columns=["Rezago", "error_Prediccion", "iteraccion"])
 
     for i in range(inicio, rowsdata):
         #i =136
@@ -70,7 +71,6 @@ def model_Rezagos(Data_Modelo,Variables_Independientes,Variable_Dependiente,pred
         # Data_Error = Data_Error.sort_values(by=['error_Prediccion'], ascending=True)
 
     rezagos = Data_Error.groupby("iteraccion").min()[["error_Prediccion"]]
-
     #rezagos1 = Data_Error.groupby("iteraccion").min()
     rezagos = pd.merge(rezagos, Data_Error, on="error_Prediccion", how="left")
     rezagos = rezagos.groupby("Rezago").count()
@@ -164,8 +164,9 @@ def GeneracionPronsoticos_Recuperados(Infectados_history,Recuperados_history):
                                             numberLag=25,
                                             predicciones=10)
 
-    grafica_series_recuperado(Recuperados_history=Recuperados_history, pronostico=PronosticosBog,ciudad='Bogotá D.C.',ciudad_name="Bogota",
-                   tipo_pronostico="Recuperados")
+    grafica_series_recuperado(Recuperados_history=Recuperados_history, pronostico=PronosticosBog, ciudad='Bogotá D.C.',
+                              ciudad_name="Bogota",
+                              tipo_pronostico="Recuperados")
 
     Pronosticosmed = PronosticosRecuperados(Infectados_history=Infectados_history,
                                             Recuperados_history=Recuperados_history,
@@ -174,8 +175,8 @@ def GeneracionPronsoticos_Recuperados(Infectados_history,Recuperados_history):
                                             predicciones=10)
 
     grafica_series_recuperado(Recuperados_history=Recuperados_history, pronostico=Pronosticosmed, ciudad='Medellín',
-                   ciudad_name="Medellin",
-                   tipo_pronostico="Recuperados")
+                              ciudad_name="Medellin",
+                              tipo_pronostico="Recuperados")
 
     Pronosticoscali = PronosticosRecuperados(Infectados_history=Infectados_history,
                                              Recuperados_history=Recuperados_history,
@@ -193,9 +194,10 @@ def GeneracionPronsoticos_Recuperados(Infectados_history,Recuperados_history):
                                               numberLag=25,
                                               predicciones=10)
 
-    grafica_series_recuperado(Recuperados_history=Recuperados_history, pronostico=PronosticosBarra, ciudad='Barranquilla',
-                   ciudad_name="Barranquilla",
-                   tipo_pronostico="Recuperados")
+    grafica_series_recuperado(Recuperados_history=Recuperados_history, pronostico=PronosticosBarra,
+                              ciudad='Barranquilla',
+                              ciudad_name="Barranquilla",
+                              tipo_pronostico="Recuperados")
 
     PronosticosCarta = PronosticosRecuperados(Infectados_history=Infectados_history,
                                               Recuperados_history=Recuperados_history,
@@ -203,9 +205,10 @@ def GeneracionPronsoticos_Recuperados(Infectados_history,Recuperados_history):
                                               numberLag=25,
                                               predicciones=10)
 
-    grafica_series_recuperado(Recuperados_history=Recuperados_history, pronostico=PronosticosCarta, ciudad='Cartagena de Indias',
-                   ciudad_name="Cartagena",
-                   tipo_pronostico="Recuperados")
+    grafica_series_recuperado(Recuperados_history=Recuperados_history, pronostico=PronosticosCarta,
+                              ciudad='Cartagena de Indias',
+                              ciudad_name="Cartagena",
+                              tipo_pronostico="Recuperados")
     print("Pronosticos realizados")
     return PronosticosBog,Pronosticosmed,Pronosticoscali,PronosticosBarra,PronosticosCarta
 
