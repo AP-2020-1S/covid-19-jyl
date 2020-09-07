@@ -1,4 +1,3 @@
-from StructureInformation import inputInformation
 from sklearn import  linear_model
 import pandas as pd
 import numpy as np
@@ -116,8 +115,6 @@ def pronosticosDeadCity(Sintomas_history,Muertes_history,ciudad):
     Pronos = pronosticosMuerte(DataModelMuertes = DataModelMuertes, rezagos = rezagos,fechamax=fechamax)
 
     return Pronos
-
-#Data_covid, Infectados_history, Recuperados_history, Muertes_history, Sintomas_history = inputInformation(url="www.datos.gov.co")
 
 def GeneracionPronsoticos_Muertos(Sintomas_history,Muertes_history):
     print("Estamos pronosticando")
