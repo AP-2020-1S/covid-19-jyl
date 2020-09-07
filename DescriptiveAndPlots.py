@@ -136,6 +136,19 @@ def grafica_series_infectados(Infectados_history,pronostico,ciudad,ciudad_name,t
     plot.figure()
     print("grafico guardado")
 
-
+def grafica_series_activos(acumulado,ciudad_name,tipo_pronostico):
+    nrow=acumulado.shape[0]
+    pronostico=acumulado.iloc[nrow-10:nrow]
+    serie_completa = acumulado.iloc[0:nrow-10]
+    plot.figure()
+    plot.figure(figsize=(16,8))
+    plot.plot(serie_completa["fecha"],serie_completa["Activos"],color="lightseagreen",label="Serie Real",linewidth=2.5)
+    plot.plot(pronostico["fecha"],pronostico["Activos"],color="salmon",label="Pronóstico",linewidth=2.5)
+    plot.legend(loc="best")
+    g=plot.axvline(x=pronostico["fecha"].tolist()[0],color='dimgray',linewidth = 1, linestyle = "dashed")
+    #plot.show()
+    g.get_figure().savefig("fig/Pronosticos/"+ciudad_name+"/"+tipo_pronostico + '.png')
+    plot.figure()
+    print("grafico guardado")
 
 
