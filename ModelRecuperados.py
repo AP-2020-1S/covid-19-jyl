@@ -210,37 +210,3 @@ def GeneracionPronsoticos_Recuperados(Infectados_history,Recuperados_history):
     return PronosticosBog,Pronosticosmed,Pronosticoscali,PronosticosBarra,PronosticosCarta
 
 
-###### PRUEBAS ######
-
-#from StructureInformation import inputInformation
-""" 
-Data_covid,Infectados_history, Recuperados_history,Muertes_history,Sintomas_history = inputInformation(url="www.datos.gov.co")
-
-PronosticosBog = PronosticosRecuperados(Infectados_history=Infectados_history,
-                                        Recuperados_history=Recuperados_history,
-                                        ciudad='Bogotá D.C.',
-                                        numberLag=25,
-                                        predicciones=10)
-
-HYISTORICOBOG = Recuperados_history[Recuperados_history["ciudad_de_ubicaci_n"] == "Bogotá D.C."]
-HYISTORICOBOG = HYISTORICOBOG[["fecha_recuperado","id_de_caso"]]
-
-#Grafica
-
-def grafica_series(Recuperados_history,pronostico,ciudad,ciudad_name,tipo_pronostico):
-    serie_completa = Recuperados_history[Recuperados_history["ciudad_de_ubicaci_n"] == ciudad]
-    serie_completa = serie_completa[["fecha_recuperado", "id_de_caso"]]
-    plt.figure()
-    plt.figure(figsize=(16,8))
-    plt.plot(serie_completa["fecha_recuperado"],serie_completa["id_de_caso"],color="lightseagreen",label="Serie Real",linewidth=2.5)
-    plt.plot(pronostico["Fecha"],pronostico["Pronostico"],color="salmon",label="Pronóstico",linewidth=2.5)
-    plt.legend(loc="best")
-    g=plt.axvline(x=pronostico["Fecha"][0],color='dimgray',linewidth = 1, linestyle = "dashed")
-    plt.show()
-    g.get_figure().savefig("fig/Pronosticos/"+ciudad_name+"/"+tipo_pronostico + '.png')
-    plt.figure()
-    print("grafico guardado")
-
-grafica_series(serie_completa=Recuperados_history,pronostico=PronosticosBog)
-"""
-
