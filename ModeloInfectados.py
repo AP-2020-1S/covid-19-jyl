@@ -63,7 +63,7 @@ def datatrain(Infectados_history,ciudad):
     X_trained_scaled = pd.DataFrame(X_trained_scaled, index=X_train.index, columns=X_train.columns.values)
     X_test_scaled = standarscaler.transform(X_test)
     X_test_scaled = pd.DataFrame(X_test_scaled, index=X_test.index, columns=X_test.columns.values)
-    return X_trained_scaled,X_test_scaled,y_train,y_test
+    return X_train,X_test,y_train,y_test
 
 def train_modelo_redes_neuronales(X_trained_scaled,X_test_scaled,y_train,y_test):
     trainX = X_trained_scaled
@@ -161,7 +161,7 @@ def datatest(Infectados_history,ciudad):
     X_trained_scaled = pd.DataFrame(X_trained_scaled, index=X_train.index, columns=X_train.columns.values)
     X_test_scaled = standarscaler.transform(X_test)
     X_test_scaled = pd.DataFrame(X_test_scaled, index=X_test.index, columns=X_test.columns.values)
-    return X_trained_scaled,X_test_scaled,y_train
+    return X_train,X_test,y_train
 
 def pronostico(X_trained_scaled,X_test_scaled,y_train):
     pronostico_redes=test_modelo_redes_neuronales(X_trained_scaled=X_trained_scaled,X_test_scaled=X_test_scaled,y_train=y_train)
@@ -241,3 +241,5 @@ def GeneracionPronsoticos_infectados(Infectados_history):
                               tipo_pronostico="Infectados")
     print("Pronosticos realizados")
     return p_b,p_m,p_c,p_ca,p_ba
+
+#ga=GeneracionPronsoticos_infectados(Infectados_history=Infectados_history)

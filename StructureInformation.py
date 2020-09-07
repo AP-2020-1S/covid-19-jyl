@@ -91,6 +91,17 @@ def structuredata_Sintomas(Data_covid1):
 def inputInformation(url):
     print("Estamos obteniendo la informacion")
     Data_covid = get_information(url=url, limit=40000000)
+    conditions = [
+        (Data_covid['sexo'] == "F"),
+        (Data_covid['sexo'] == "f"),
+        (Data_covid['sexo'] == "M"),
+        (Data_covid['sexo'] == "m"),
+    ]
+
+    values = ['Femenino', 'Femenino', 'Masculino', 'Masculino']
+
+    Data_covid['sexo'] = np.select(conditions, values)
+
     Data_covid1 = filter_city_categorical_values(dataframe=Data_covid,
                                                 filterCity=['Bogotá D.C.',
                                                             'Medellín',
