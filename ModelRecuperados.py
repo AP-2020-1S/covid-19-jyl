@@ -1,9 +1,12 @@
-from sklearn import  linear_model
+from sodapy import Socrata
 import pandas as pd
 import numpy as np
 from datetime import timedelta
 import re
-from DescriptiveAndPlots import grafica_series_recuperado
+import pandas as pd
+from sodapy import Socrata
+import numpy as np
+from DescriptiveAndPlots import grafica_series
 
 ###################### modelo Regresion rezagos###############
 
@@ -161,19 +164,11 @@ def GeneracionPronsoticos_Recuperados(Infectados_history,Recuperados_history):
                                             numberLag=25,
                                             predicciones=10)
 
-    grafica_series_recuperado(Recuperados_history=Recuperados_history, pronostico=PronosticosBog, ciudad='Bogotá D.C.',
-                              ciudad_name="Bogota",
-                              tipo_pronostico="Recuperados")
-
     Pronosticosmed = PronosticosRecuperados(Infectados_history=Infectados_history,
                                             Recuperados_history=Recuperados_history,
                                             ciudad='Medellín',
                                             numberLag=25,
                                             predicciones=10)
-
-    grafica_series_recuperado(Recuperados_history=Recuperados_history, pronostico=Pronosticosmed, ciudad='Medellín',
-                              ciudad_name="Medellin",
-                              tipo_pronostico="Recuperados")
 
     Pronosticoscali = PronosticosRecuperados(Infectados_history=Infectados_history,
                                              Recuperados_history=Recuperados_history,
@@ -181,32 +176,34 @@ def GeneracionPronsoticos_Recuperados(Infectados_history,Recuperados_history):
                                              numberLag=25,
                                              predicciones=10)
 
-    grafica_series_recuperado(Recuperados_history=Recuperados_history, pronostico=Pronosticoscali, ciudad='Cali',
-                   ciudad_name="Cali",
-                   tipo_pronostico="Recuperados")
-
     PronosticosBarra = PronosticosRecuperados(Infectados_history=Infectados_history,
                                               Recuperados_history=Recuperados_history,
                                               ciudad='Barranquilla',
                                               numberLag=25,
                                               predicciones=10)
 
-    grafica_series_recuperado(Recuperados_history=Recuperados_history, pronostico=PronosticosBarra,
-                              ciudad='Barranquilla',
-                              ciudad_name="Barranquilla",
-                              tipo_pronostico="Recuperados")
-
     PronosticosCarta = PronosticosRecuperados(Infectados_history=Infectados_history,
                                               Recuperados_history=Recuperados_history,
                                               ciudad='Cartagena de Indias',
                                               numberLag=25,
                                               predicciones=10)
-
-    grafica_series_recuperado(Recuperados_history=Recuperados_history, pronostico=PronosticosCarta,
-                              ciudad='Cartagena de Indias',
-                              ciudad_name="Cartagena",
-                              tipo_pronostico="Recuperados")
     print("Pronosticos realizados")
     return PronosticosBog,Pronosticosmed,Pronosticoscali,PronosticosBarra,PronosticosCarta
+
+
+###### PRUEBAS ######
+
+from StructureInformation import inputInformation
+
+Data_covid,Infectados_history, Recuperados_history,Muertes_history,Sintomas_history = inputInformation(url="www.datos.gov.co")
+PronosticosBog = PronosticosRecuperados(Infectados_history=Infectados_history,
+                                        Recuperados_history=Recuperados_history,
+                                        ciudad='Bogotá D.C.',
+                                        numberLag=25,
+                                        predicciones=10)
+
+HYISTORICOBOG = Recuperados_history[Recuperados_history["ciudad_de_ubicaci_n"] == "Bogotá D.C."]
+HYISTORICOBOG = HYISTORICOBOG[["fecha_recuperado","id_de_caso"]]
+
 
 

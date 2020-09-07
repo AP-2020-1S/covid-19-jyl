@@ -2,6 +2,8 @@ from sklearn import  linear_model
 import pandas as pd
 import numpy as np
 from datetime import timedelta
+from datetime import datetime
+import matplotlib.pylab as plot
 from DescriptiveAndPlots import grafica_series_muerte
 
 
