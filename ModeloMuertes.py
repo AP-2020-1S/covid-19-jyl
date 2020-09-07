@@ -1,8 +1,10 @@
-from StructureInformation import inputInformation
 from sklearn import  linear_model
 import pandas as pd
 import numpy as np
 from datetime import timedelta
+from datetime import datetime
+import matplotlib.pylab as plot
+from DescriptiveAndPlots import grafica_series_muerte
 
 
 def error_cuadratico(estimador, x,y_real):
@@ -21,8 +23,7 @@ def BaseModeloMuertes(Sintomas_history,Muertes_history,ciudad):
     x["Ratio61-80"] = x["61-80 Años"] / x['61-80 Años General']
     x["Ratio>80"] = x["> 80 Años"] / x['> 80 Años General']
 
-    x = x[['Ratio<20',
-           'Ratio21-40', 'Ratio41-60', 'Ratio61-80', 'Ratio>80']]
+    x = x[['Ratio<20','Ratio21-40', 'Ratio41-60', 'Ratio61-80', 'Ratio>80']]
     x = x.fillna(0)
 
     pesosedad = x.mean(axis=0, skipna=True)
@@ -38,7 +39,7 @@ def BaseModeloMuertes(Sintomas_history,Muertes_history,ciudad):
     X.columns = ['fecha', '21-40 Años', '41-60 Años', '61-80 Años', '< 20 Años', '> 80 Años']
     X = pd.merge(X, y, on=['fecha'], how="left")
     X = X.dropna()
-    return X
+    return X, y
 
 def TrainMuertes(DataModelMuertes,predicciones,iniciogenerador):
     x = DataModelMuertes[['21-40 Años', '41-60 Años', '61-80 Años', '< 20 Años', '> 80 Años']]
@@ -67,8 +68,9 @@ def TrainMuertes(DataModelMuertes,predicciones,iniciogenerador):
     rezagos = rezagos.index.tolist()[0:4]
     return  rezagos
 
-def pronosticosMuerte(DataModelMuertes, rezagos):
-    datelist = pd.date_range(DataModelMuertes["fecha"].max() + timedelta(1), periods=10)
+def pronosticosMuerte(DataModelMuertes, rezagos,fechamax):
+    fechamax['fecha']=pd.to_datetime(fechamax['fecha'])
+    datelist = pd.date_range(fechamax['fecha'].max()+ timedelta(1), periods=10)
 
     indexday = pd.DataFrame({"index": range(1, 11)})
 
@@ -106,39 +108,57 @@ def pronosticosMuerte(DataModelMuertes, rezagos):
     return pronosticofinal
 
 def pronosticosDeadCity(Sintomas_history,Muertes_history,ciudad):
-    DataModelMuertes = BaseModeloMuertes(Sintomas_history=Sintomas_history, Muertes_history=Muertes_history,
+
+    DataModelMuertes,fechamax = BaseModeloMuertes(Sintomas_history=Sintomas_history, Muertes_history=Muertes_history,
                                          ciudad=ciudad)
     rezagos = TrainMuertes(DataModelMuertes=DataModelMuertes, predicciones=10, iniciogenerador=50)
-    Pronos = pronosticosMuerte(DataModelMuertes = DataModelMuertes, rezagos = rezagos)
+    Pronos = pronosticosMuerte(DataModelMuertes = DataModelMuertes, rezagos = rezagos,fechamax=fechamax)
+
     return Pronos
 
-Data_covid,Infectados_history, Recuperados_history,Muertes_history,Sintomas_history = inputInformation(url="www.datos.gov.co")
+def GeneracionPronsoticos_Muertos(Sintomas_history,Muertes_history):
+    print("Estamos pronosticando")
 
-pronosticosBog = pronosticosDeadCity(Sintomas_history =Sintomas_history,
-                                   Muertes_history = Muertes_history,
-                                   ciudad = 'Bogotá D.C.')
+    pronosticosBog = pronosticosDeadCity(Sintomas_history=Sintomas_history,
+                                         Muertes_history=Muertes_history,
+                                         ciudad='Bogotá D.C.')
 
-pronosticosMed = pronosticosDeadCity(Sintomas_history =Sintomas_history,
-                                   Muertes_history = Sintomas_history,
-                                   ciudad = 'Bogotá D.C.')
-pronosticosCali = pronosticosDeadCity(Sintomas_history =Sintomas_history,
-                                   Muertes_history = Sintomas_history,
-                                   ciudad = 'Bogotá D.C.')
-pronosticosBog = pronosticosDeadCity(Sintomas_history =Sintomas_history,
-                                   Muertes_history = Sintomas_history,
-                                   ciudad = 'Bogotá D.C.')
+    grafica_series_muerte(Muertes_history=Muertes_history, pronostico=pronosticosBog, ciudad='Bogotá D.C.',
+                   ciudad_name="Bogota",
+                   tipo_pronostico="Muertos")
 
+    pronosticosMed = pronosticosDeadCity(Sintomas_history=Sintomas_history,
+                                         Muertes_history=Muertes_history,
+                                         ciudad='Medellín')
 
+    grafica_series_muerte(Muertes_history=Muertes_history, pronostico=pronosticosMed, ciudad='Medellín',
+                   ciudad_name="Medellin",
+                   tipo_pronostico="Muertos")
 
+    pronosticosCali = pronosticosDeadCity(Sintomas_history=Sintomas_history,
+                                          Muertes_history=Muertes_history,
+                                          ciudad='Cali')
 
+    grafica_series_muerte(Muertes_history=Muertes_history, pronostico=pronosticosCali, ciudad='Cali',
+                   ciudad_name="Cali",
+                   tipo_pronostico="Muertos")
 
+    pronosticosBarra = pronosticosDeadCity(Sintomas_history=Sintomas_history,
+                                           Muertes_history=Muertes_history,
+                                           ciudad='Barranquilla')
 
+    grafica_series_muerte(Muertes_history=Muertes_history, pronostico=pronosticosBarra, ciudad='Barranquilla',
+                   ciudad_name="Barranquilla",
+                   tipo_pronostico="Muertos")
 
+    pronosticosCarta = pronosticosDeadCity(Sintomas_history=Sintomas_history,
+                                           Muertes_history=Muertes_history,
+                                           ciudad='Cartagena de Indias')
 
+    grafica_series_muerte(Muertes_history=Muertes_history, pronostico=pronosticosCarta, ciudad='Cartagena de Indias',
+                   ciudad_name="Cartagena",
+                   tipo_pronostico="Muertos")
 
-
-
-
-
-
+    print("Pronosticos realizados")
+    return pronosticosBog, pronosticosMed, pronosticosCali, pronosticosBarra, pronosticosCarta
 
