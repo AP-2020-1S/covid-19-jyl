@@ -3,7 +3,7 @@ import seaborn as sns
 import numpy as np
 from StructureInformation import inputInformation
 
-Data_covid, Infectados_history, Recuperados_history, Muertes_history, Sintomas_history = inputInformation(url="www.datos.gov.co")
+#Data_covid, Infectados_history, Recuperados_history, Muertes_history, Sintomas_history = inputInformation(url="www.datos.gov.co")
 def barplotciudades(Data_covid, pathsave,title):
     ciudadesinfectados = Data_covid.groupby("ciudad_de_ubicaci_n").count()["id_de_caso"].sort_values(
         ascending=False).head(10)

@@ -1,11 +1,8 @@
-from sodapy import Socrata
+from sklearn import  linear_model
 import pandas as pd
 import numpy as np
 from datetime import timedelta
 import re
-import pandas as pd
-from sodapy import Socrata
-import numpy as np
 from DescriptiveAndPlots import grafica_series_recuperado
 
 ###################### modelo Regresion rezagos###############
