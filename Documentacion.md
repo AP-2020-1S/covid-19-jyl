@@ -62,12 +62,17 @@ Para la ejecución de los modelos se definen los siguientes pasos:
 
 7.	Finalmente se produce el ensamble del proyecto el cual integra los diferentes diseños del modelo seleccionados para el caso de estudio y que permitirá integrar el dashboard y los pronósticos para cada una de las principales ciudades del país.
 
+8. Modelo de recuperados: para este modelo se tiene como premisa la distancia en tiempo que hay entre la fecha de diagnóstico y la fecha de recuparación, para esto se generan rezagos para explixcar la cantidad de recuperados en un tiempo t.
+
+9. Modelo Muertes: Se generan pesos sobre el rango de edades y se generan rezagos sobre la fecha de sintomas.
+
+10. Modelo Infectados: Las predicciones se generan a través de varios modelos teniendo como co variables los rezagos t-1, t-2 y t-3.
+ 
 #### Despliegue de los resultados (producto de datos)
 Para esta fase final se busca recrear un producto que logre relacionar indicadores generales del volumen de casos de infectados, recuperados, activos y muertos, concentraciones generales por ciudad y distribución de la edad. Posteriormente se tendrá menú de navegación para consultar de manera independiente cada ciudad junto con las diferentes gráficas que relacionan sus pronósticos individuales. Para el despligue del proyecto es usado Jinja el cual un motor de plantillas con todas las funciones para Python. 
 
 
 #### Fuentes Web
-
 https://jdvelasq.github.io/courses/ 
 
 https://www.sciencedirect.com/science/article/pii/S2468042720300087 
