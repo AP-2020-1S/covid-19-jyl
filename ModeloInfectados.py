@@ -8,10 +8,7 @@ from datetime import date
 import matplotlib.pylab as plt
 from sklearn.preprocessing import StandardScaler
 from sklearn.neural_network import MLPRegressor
-from skle
-
-
-arn.metrics import mean_squared_error
+from sklearn.metrics import mean_squared_error
 from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestRegressor
 from keras.preprocessing.sequence import TimeseriesGenerator
